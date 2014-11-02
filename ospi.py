@@ -26,6 +26,7 @@ def timing_loop():
             if (lt[3] * 60) + lt[4] != last_min:  # only check programs once a minute
                 last_min = (lt[3] * 60) + lt[4]
                 extra_adjustment = plugin_adjustment()
+                print extra_adjustment
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     # check if program time matches current time, is active, and has a duration
                     if prog_match(p) and p[0] and p[6]:
