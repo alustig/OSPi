@@ -47,7 +47,7 @@ def timing_loop():
                                         gv.ps[sid][0] = i + 1  # store program number for display
                                         gv.ps[sid][1] = duration
                                     else:  # concurrent mode
-                                        # If duration is shortter than any already set for this station
+                                        # If duration is shorter than any already set for this station
                                         if duration < gv.rs[sid][2]:
                                             continue
                                         else:
@@ -55,6 +55,7 @@ def timing_loop():
                                             gv.rs[sid][3] = i + 1  # store program number
                                             gv.ps[sid][0] = i + 1  # store program number for display
                                             gv.ps[sid][1] = duration
+                                print gv.rs[sid]
                         schedule_stations(p[7:7 + gv.sd['nbrd']])  # turns on gv.sd['bsy']
 
         if gv.sd['bsy']:
