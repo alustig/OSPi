@@ -41,6 +41,12 @@ def timing_loop():
                                     continue
 
                                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
+                                    print 's:'
+                                    print s
+                                    temp = 1<<s
+                                    print temp
+                                    print 'IR:'
+                                    print gv.sd['ir'][b]
                                     if gv.sd['seq']:  # sequential mode
                                         gv.rs[sid][2] = duration
                                         gv.rs[sid][3] = i + 1  # store program number for scheduling
@@ -56,6 +62,7 @@ def timing_loop():
                                             gv.ps[sid][0] = i + 1  # store program number for display
                                             gv.ps[sid][1] = duration
                             print gv.rs
+                            print gv.ps
                         schedule_stations(p[7:7 + gv.sd['nbrd']])  # turns on gv.sd['bsy']
 
         if gv.sd['bsy']:
