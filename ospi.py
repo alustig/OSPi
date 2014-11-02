@@ -41,10 +41,9 @@ def timing_loop():
                                     continue
 
                                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
-                                    print 's:',s
-                                    temp = 1<<s
-                                    print '1<<s',temp
-                                    print 'IR:',gv.sd['ir'][b]
+                                    print 'station ',s, ' ignor rain?',gv.sd['ir'][b] == 1 << s
+                                    if gv.sd['ir'][b] == 1 << s: # this station is ignoring rain and water level adjusting
+                                        duration = duration/extra_adjustment
                                     if gv.sd['seq']:  # sequential mode
                                         gv.rs[sid][2] = duration
                                         gv.rs[sid][3] = i + 1  # store program number for scheduling
