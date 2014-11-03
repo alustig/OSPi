@@ -40,7 +40,7 @@ class sunrise_sunset(ProtectedPage):
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
-    """Save user input to sun.json file"""
+    """Save user input to sunrise.json file"""
     def GET(self):
         qdict = web.input()
         if 'auto_ss' not in qdict:
