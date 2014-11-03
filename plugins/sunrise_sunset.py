@@ -27,15 +27,14 @@ urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.su
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 
-
 class sunrise_sunset(ProtectedPage):
     """Load an html page for entering zip code and choosing station"""
     def GET(self):
         try:
             with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
                 sun_data = json.load(f)
-        except IOError:  # If file does not exist
-            sun_data = gv.sd['loc']
+        except IOError:  # If file does not exist create the defaults
+            sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
                 json.dump(sun_data, f)
         return template_render.sunrise(sun_data)
@@ -48,5 +47,30 @@ class update(ProtectedPage):
             qdict['auto_ss'] = 'off'
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
-        checker.update()
         raise web.seeother('/ss')
+
+
+################################################################################
+# Helper functions:                                                            #
+################################################################################
+
+def options_data():
+    # Defaults:
+    result = {
+        'auto_ss': 'off',
+        'zip': '',
+        'srs': '',
+        'sre': '',
+        'sss': '',
+        'sse': '',
+    }
+    try:
+        with open('./data/sunrise.json', 'r') as f:  # Read the settings from file
+            file_data = json.load(f)
+        for key, value in file_data.iteritems():
+            if key in result:
+                result[key] = value
+    except Exception:
+        pass
+
+    return result
