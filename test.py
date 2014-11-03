@@ -1,4 +1,4 @@
-import ephem
+import ephem, sys
 from pyzipcode import ZipCodeDatabase
 from datetime import datetime
 
@@ -20,12 +20,24 @@ o.lat=str(zipcode.latitude)
 o.long=str(zipcode.longitude)
 s=ephem.Sun()
 sunrise = str(ephem.localtime(o.next_rising(s)))
-sunset = str(ephem.localtime(o.next_setting(s)))
-
 sunrise = sunrise.split(' ')
 sunrise = sunrise[1].split(":")
+if (sunrise[0]<13):
+	sunrise[2] = 'AM' 
+else:
+	sunrise[0] -= 12
+	sunrise[2] = 'PM'
 
 
+sunset = str(ephem.localtime(o.next_setting(s)))
+sunset = sunset.split(' ')
+sunset = sunset[1].split(":")
+if (sunset[0]<13):
+	sunset[2] = 'AM' 
+else:
+	sunset[0] -= 12
+	sunset[2] = 'PM'
 
-print "Rising ",sunrise[0],":",sunrise[1]
-print "Setting ",ephem.localtime(o.next_setting(s))
+
+sys.stdout.write("Rising " + sunrise[0] + ":" + sunrise[1] + " " + sunrise[2])
+sys.stdout.write("Setting " + sunset[0] + ":" + sunset[1] + " " + sunset[2])
