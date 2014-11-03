@@ -39,13 +39,13 @@ $code:
         </table>
         ${gv.pd}<br/>
         <hr>
-        <!--<select name="stationList">-->
+        <select name="stationList">
         $for bid in range(0,gv.sd['nbrd']):
             $for s in range(0,8):
                 $ sid = bid*8 + s;
                 $if gv.sd['show'][bid]&(1<<s):
-                    yes: option value="${snames[sid]}" name="s${sid}" id="n${sid}" ===> ${snames[sid]}<br/>
-        <!--</select>-->
+                    <option value="${snames[sid]}" name="s${sid}" id="n${sid}">${snames[sid]}</option>
+        </select>
     </form>
 </div>
 <div id="controls">
