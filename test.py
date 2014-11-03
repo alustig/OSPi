@@ -18,5 +18,5 @@ o.date = date.today()
 o.lat=zipcode.latitude
 o.long=zipcode.longitude
 s=ephem.Sun()
-print "Rising ",ephem.o.next_rising(s)
-print "Setting ",ephem.o.next_setting(s)
+print "Rising ",o.next_rising(s)
+print "Setting ",o.next_setting(s)
