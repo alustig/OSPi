@@ -43,7 +43,8 @@ $code:
         $for bid in range(0,gv.sd['nbrd']):
             $for s in range(0,8):
                 $ sid = bid*8 + s;
-                <option value="${snames[sid]}" name="s${sid}" id="n${sid}" />
+                if gv.sd['show'][bid]&(1<<s)
+                    <option value="${snames[sid]}" name="s${sid}" id="n${sid}">${snames[sid]}</option>
         </select>
     </form>
 </div>
