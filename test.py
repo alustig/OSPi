@@ -19,5 +19,13 @@ o.date = now
 o.lat=str(zipcode.latitude)
 o.long=str(zipcode.longitude)
 s=ephem.Sun()
-print "Rising ",ephem.localtime(o.next_rising(s))
+sunrise = str(ephem.localtime(o.next_rising(s)))
+sunset = str(ephem.localtime(o.next_setting(s)))
+
+sunrise = sunrise.split(' ')
+sunrise = sunrise[1].split(":")
+
+
+
+print "Rising ",sunrise[0],":",sunrise[1]
 print "Setting ",ephem.localtime(o.next_setting(s))
