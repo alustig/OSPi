@@ -1,5 +1,6 @@
 import ephem
 from pyzipcode import ZipCodeDatabase
+from datetime import date
 
 zcdb = ZipCodeDatabase()
 zipcode = zcdb[23229]
@@ -10,7 +11,10 @@ print zipcode.latitude
 print zipcode.longitude
 print zipcode.timezone
 
-o=ephem.Observer()
+o = ephem.Observer()
+o.pressure = 0
+o.horizon = '-0:34'
+o.date = date.today()
 o.lat=zipcode.latitude
 o.long=zipcode.longitude
 s=ephem.Sun()
