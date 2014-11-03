@@ -37,7 +37,10 @@ $code:
                             $for s in range(0,8):
                                 $ sid = bid*8 + s;
                                 $if gv.sd['show'][bid]&(1<<s):
-                                    <option value="${sid}" ${" checked" if m_vals['station'] == sid else ""} name="s${sid}" id="n${sid}">${snames[sid]}</option>
+                                    $ c = ""
+                                    $if m_vals['station'] == sid:
+                                        $ c = "checked"
+                                    <option value="${sid}" ${c} name="s${sid}" id="n${sid}">${snames[sid]}</option>
                     </select>
                 </td>
             </tr>
