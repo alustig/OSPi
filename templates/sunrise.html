@@ -30,14 +30,14 @@ $code:
                 <td><input type="text" name="zip" value=$m_vals["zip"]></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>Station:</td>
+                <td style='text-transform: none; text-align: right;'>Station:</td>
                 <td>
                     <select name="station">
                         $for bid in range(0,gv.sd['nbrd']):
                             $for s in range(0,8):
                                 $ sid = bid*8 + s;
                                 $if gv.sd['show'][bid]&(1<<s):
-                                    <option value="${snames[sid]}" name="s${sid}" id="n${sid}">${snames[sid]}</option>
+                                    <option value="s${sid}" ${" checked" if m_vals['station'] == sid else ""} name="s${sid}" id="n${sid}">${snames[sid]}</option>
                     </select>
                 </td>
             </tr>
