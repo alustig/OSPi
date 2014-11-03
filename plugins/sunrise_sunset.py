@@ -12,7 +12,7 @@ from webpages import ProtectedPage
 
 
 # Add a new url to open the data entry page.
-urls.extend(['/ss', 'plugins.sunrise_sunset.lights', '/uss', 'plugins.sunrise_sunset.update_sunrise_sunset'])
+urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.sunrise_sunset.update_sunrise_sunset'])
 
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
