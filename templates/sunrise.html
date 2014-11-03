@@ -21,15 +21,16 @@ $code:
 
 <div id="plugin">
     <div class="title">Sunrise &amp; Sunset</div>
-    <p>Fill out the info below to automatically create and adjust a program based on your location</p>
+    <p>Fill out the info below to create and daily adjust a program based on your location</p>
     <form id="pluginForm" action="/uss" method="get">
+        Enable this plugin: <input name='auto_ss' type='checkbox'${" checked" if m_vals['auto_ss'] else ""}>
         <table class="optionList">
             <tr>
                 <td style='text-transform: none;'>Zip Code:</td>
-                <td><input type="text" name="zip" value=$m_vals[0]></td>
+                <td><input type="text" name="zip" value=$m_vals['zip']></td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>February:</td>
+                <td style='text-transform: none;'>Station:</td>
                 <td>
                     <select name="stationList">
                         $for bid in range(0,gv.sd['nbrd']):
@@ -41,8 +42,20 @@ $code:
                 </td>
             </tr>
             <tr>
-                <td style='text-transform: none;'>March:</td>
-                <td><input type="text" name="mar" value=$m_vals[2]></td>
+                <td style='text-transform: none;'>Start time before sunrise (mins):</td>
+                <td><input type="text" name="mar" value=$m_vals['srs']></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>End time (hh:mm):</td>
+                <td><input type="text" name="mar" value=$m_vals['srend']></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>Start time before sunset (mins):</td>
+                <td><input type="text" name="mar" value=$m_vals['sss']></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>End time (hh:mm):</td>
+                <td><input type="text" name="mar" value=$m_vals['ssend']></td>
             </tr>
         </table>
         ${gv.pd}<br/>
