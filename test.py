@@ -16,8 +16,8 @@ o = ephem.Observer()
 o.pressure = 0
 o.horizon = '-0:34'
 o.date = now
-o.lat=zipcode.latitude
-o.long=zipcode.longitude
+o.lat=str(zipcode.latitude)
+o.long=str(zipcode.longitude)
 s=ephem.Sun()
 print "Rising ",ephem.localtime(o.next_rising(s))
 print "Setting ",ephem.localtime(o.next_setting(s))
