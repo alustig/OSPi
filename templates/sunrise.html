@@ -42,9 +42,8 @@ $code:
         <!--<select name="stationList">-->
         $for bid in range(0,gv.sd['nbrd']):
             $for s in range(0,8):
-                $ sid = bid*8 + s;
-                gv.sd['show'][bid] | s<br/>
-                if gv.sd['show'][bid]&(1<<s)
+                $sid = bid*8 + s;
+                $if gv.sd['show'][bid]&(1<<s):
                     yes: option value="${snames[sid]}" name="s${sid}" id="n${sid}" ===> ${snames[sid]}<br/>
         <!--</select>-->
     </form>
