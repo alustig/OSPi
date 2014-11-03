@@ -21,7 +21,6 @@ from webpages import ProtectedPage
 # 6: Duration in seconds
 # 7: Bitwise value of the stations the program applies to
 
-
 # Add a new url to open the data entry page.
 urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.sunrise_sunset.update'])
 
