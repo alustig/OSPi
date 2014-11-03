@@ -30,7 +30,15 @@ $code:
             </tr>
             <tr>
                 <td style='text-transform: none;'>February:</td>
-                <td><input type="text" name="feb" value=$m_vals[1]></td>
+                <td>
+                    <select name="stationList">
+                        $for bid in range(0,gv.sd['nbrd']):
+                            $for s in range(0,8):
+                                $ sid = bid*8 + s;
+                                $if gv.sd['show'][bid]&(1<<s):
+                                    <option value="${snames[sid]}" name="s${sid}" id="n${sid}">${snames[sid]}</option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td style='text-transform: none;'>March:</td>
@@ -39,13 +47,7 @@ $code:
         </table>
         ${gv.pd}<br/>
         <hr>
-        <select name="stationList">
-        $for bid in range(0,gv.sd['nbrd']):
-            $for s in range(0,8):
-                $ sid = bid*8 + s;
-                $if gv.sd['show'][bid]&(1<<s):
-                    <option value="${snames[sid]}" name="s${sid}" id="n${sid}">${snames[sid]}</option>
-        </select>
+        
     </form>
 </div>
 <div id="controls">
