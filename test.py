@@ -25,7 +25,7 @@ sunrise = sunrise[1].split(":")
 if (sunrise[0]<13):
 	sunrise[2] = 'AM' 
 else:
-	sunrise[0] = int(sunrise[0])-12
+	sunrise[0] = str(int(sunrise[0])-12)
 	sunrise[2] = 'PM'
 
 
@@ -35,7 +35,7 @@ sunset = sunset[1].split(":")
 if (sunset[0]<13):
 	sunset[2] = 'AM' 
 else:
-	sunset[0] = int(sunset[0])-12
+	sunset[0] = str(int(sunset[0])-12)
 	sunset[2] = 'PM'
 
 
