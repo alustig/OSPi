@@ -11,7 +11,7 @@ print zipcode.latitude
 print zipcode.longitude
 print zipcode.timezone
 
-now = datetime.datetime.now(timezone.utc)
+now = datetime.datetime.now(datetime.timezone.utc)
 o = ephem.Observer()
 o.pressure = 0
 o.horizon = '-0:34'
