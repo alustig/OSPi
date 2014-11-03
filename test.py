@@ -11,12 +11,13 @@ print zipcode.latitude
 print zipcode.longitude
 print zipcode.timezone
 
+now = datetime.now(timezone.utc)
 o = ephem.Observer()
 o.pressure = 0
 o.horizon = '-0:34'
-o.date = date.today()
+o.date = now
 o.lat=zipcode.latitude
 o.long=zipcode.longitude
 s=ephem.Sun()
-print "Rising ",o.next_rising(s)
-print "Setting ",o.next_setting(s)
+print "Rising ",ephem.localtime(o.next_rising(s))
+print "Setting ",ephem.localtime(o.next_setting(s))
