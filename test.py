@@ -1,9 +1,9 @@
 from pyzipcode import ZipCodeDatabase
 zcdb = ZipCodeDatabase()
 zipcode = zcdb[23229]
-zipcode.zip
-zipcode.city
-zipcode.state
-zipcode.longitude
-zipcode.latitude
-zipcode.timezone
+print zipcode.zip
+print zipcode.city
+print zipcode.state
+print zipcode.longitude
+print zipcode.latitude
+print zipcode.timezone
