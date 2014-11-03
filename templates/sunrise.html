@@ -2,6 +2,9 @@ $def with(m_vals)
 
 $var title: OpenSprinkler Pi Sunrise Sunset Plugin
 $var page: plugins
+$code:
+    snames = gv.snames
+
 <script>
     // Initialize behaviors
     jQuery(document).ready(function(){
@@ -36,7 +39,10 @@ $var page: plugins
         </table>
         ${gv.pd}<br/>
         <hr>
-        ${gv.snames}<br/>
+        $for bid in range(0,gv.sd['nbrd']):
+            $for s in range(0,8):
+                $ sid = bid*8 + s;
+                Value: ${snames[sid]} Name: s${sid} Id: n${sid}
     </form>
 </div>
 <div id="controls">
