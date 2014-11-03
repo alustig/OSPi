@@ -1,6 +1,6 @@
 import ephem
 from pyzipcode import ZipCodeDatabase
-from datetime import datetime, timezone
+import datetime
 
 zcdb = ZipCodeDatabase()
 zipcode = zcdb[23229]
