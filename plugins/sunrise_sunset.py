@@ -10,6 +10,17 @@ from urls import urls  # Get access to ospi's URLs
 from ospi import template_render
 from webpages import ProtectedPage
 
+# gv.pd Reference
+###########################
+# 0: On or Off
+# 1: Weekly (127) or interval
+# 2: Something to do with interval (0 if weekly)
+# 3: Start time in minutes from 00:00 hours (300 == 5:00 AM)
+# 4: End time in minutes from 00:00 hours (720 == 12:00 PM)
+# 5: Reccuring length in mins
+# 6: Duration in seconds
+# 7: Bitwise value of the stations the program applies to
+
 
 # Add a new url to open the data entry page.
 urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.sunrise_sunset.update_sunrise_sunset'])
@@ -33,4 +44,3 @@ class sunrise_sunset(ProtectedPage):
 
 class update_sunrise_sunset(ProtectedPage):
         """Save user input to sun.json file"""
-        
