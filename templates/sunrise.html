@@ -1,0 +1,42 @@
+$def with(m_vals)
+
+$var title: OpenSprinkler Pi Sunrise Sunset Plugin
+$var page: plugins
+<script>
+    // Initialize behaviors
+    jQuery(document).ready(function(){
+
+        jQuery("#cSubmit").click(function() {
+            jQuery("#pluginForm").submit();
+        });
+        jQuery("button#cCancel").click(function(){
+            window.location="/";
+        });
+
+    });
+</script>
+
+<div id="plugin">
+    <div class="title">Sunrise &amp; Sunset</div>
+    <p>Fill out the info below to automatically create and adjust a program based on your location</p>
+    <form id="pluginForm" action="/uss" method="get">
+        <table class="optionList">
+            <tr>
+                <td style='text-transform: none;'>Zip Code:</td>
+                <td><input type="text" name="jan" value=$m_vals[0]></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>February:</td>
+                <td><input type="text" name="feb" value=$m_vals[1]></td>
+            </tr>
+            <tr>
+                <td style='text-transform: none;'>March:</td>
+                <td><input type="text" name="mar" value=$m_vals[2]></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="controls">
+    <button id="cSubmit" class="submit"><b>Submit</b></button>
+    <button id="cCancel" class="cancel danger">Cancel</button>
+</div>

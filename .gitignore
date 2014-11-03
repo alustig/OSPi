@@ -7,3 +7,4 @@ web/
 .idea
 /.settings
 /data/*.db
+backup/
