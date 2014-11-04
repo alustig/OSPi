@@ -23,41 +23,43 @@ $code:
     <div class="title">Sunrise &amp; Sunset</div>
     <p>Fill out the info below to create and daily adjust a program based on your location</p>
     <form id="pluginForm" action="/uss" method="get">
-        Enable this plugin: <input name='auto_ss' type='checkbox'${" checked" if m_vals['auto_ss'] == "on" else ""}> 
-        <table class="optionList" style="float: left">
-            <tr>
-                <td style='text-transform: none; text-align: right;'>Zip Code:</td>
-                <td><input type="text" name="zip" value=$m_vals["zip"]></td>
-            </tr>
-            <tr>
-                <td style='text-transform: none; text-align: right;'>Station:</td>
-                <td>
-                    <select name="station">
-                        $for bid in range(0,gv.sd['nbrd']):
-                            $for s in range(0,8):
-                                $ sid = bid*8 + s;
-                                $if gv.sd['show'][bid]&(1<<s):
-                                    <option value="${sid}" ${"selected=selected" if int(m_vals['station']) == sid else ""} name="s${sid}" id="n${sid}">${snames[sid]}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td style='text-transform: none; text-align: right;'>Start time before sunrise (mins):</td>
-                <td><input type="text" name="srs" value=$m_vals["srs"]></td>
-            </tr>
-            <tr>
-                <td style='text-transform: none; text-align: right;'>End time after sunrise (mins):</td>
-                <td><input type="text" name="sre" value=$m_vals["sre"]></td>
-            </tr>
-            <tr>
-                <td style='text-transform: none; text-align: right;'>Start time before sunset (mins):</td>
-                <td><input type="text" name="sss" value=$m_vals["sss"]></td>
-            </tr>
-            <tr>
-                <td style='text-transform: none; text-align: right;'>End time 24H (hh:mm):</td>
-                <td><input type="text" name="sse" value=$m_vals["sse"]></td>
-            </tr>
-        </table>
+        <div style="float: left; width: 430px; margin-right: 10px;">
+            Enable this plugin: <input name='auto_ss' type='checkbox'${" checked" if m_vals['auto_ss'] == "on" else ""}> 
+            <table class="optionList">
+                <tr>
+                    <td style='text-transform: none; text-align: right;'>Zip Code:</td>
+                    <td><input type="text" name="zip" value=$m_vals["zip"]></td>
+                </tr>
+                <tr>
+                    <td style='text-transform: none; text-align: right;'>Station:</td>
+                    <td>
+                        <select name="station">
+                            $for bid in range(0,gv.sd['nbrd']):
+                                $for s in range(0,8):
+                                    $ sid = bid*8 + s;
+                                    $if gv.sd['show'][bid]&(1<<s):
+                                        <option value="${sid}" ${"selected=selected" if int(m_vals['station']) == sid else ""} name="s${sid}" id="n${sid}">${snames[sid]}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style='text-transform: none; text-align: right;'>Start time before sunrise (mins):</td>
+                    <td><input type="text" name="srs" value=$m_vals["srs"]></td>
+                </tr>
+                <tr>
+                    <td style='text-transform: none; text-align: right;'>End time after sunrise (mins):</td>
+                    <td><input type="text" name="sre" value=$m_vals["sre"]></td>
+                </tr>
+                <tr>
+                    <td style='text-transform: none; text-align: right;'>Start time before sunset (mins):</td>
+                    <td><input type="text" name="sss" value=$m_vals["sss"]></td>
+                </tr>
+                <tr>
+                    <td style='text-transform: none; text-align: right;'>End time 24H (hh:mm):</td>
+                    <td><input type="text" name="sse" value=$m_vals["sse"]></td>
+                </tr>
+            </table>
+        </div>
 
         <div>
             Next sunrise will be at: <span style="font-weight: bold;">$m_vals['sunrise']</span><br/>
@@ -65,7 +67,7 @@ $code:
         </div>
 
         ${gv.pd}<br/>
-        <hr>
+        <hr style="clear: both;">
         
     </form>
 </div>
