@@ -108,9 +108,9 @@ def create_program(data):
         sretd = datetime.timedelta(0,0,0,0,int(data['sre']))
         srs = srtime-srstd
         sre = srstd+sretd
-        print srtime.datetime.time()
-        print srs.datetime.time()
-        print sre.datetime.time()
+        print srtime.time()
+        print srs.time()
+        print sre.time()
 
         newrise = [1,127,0,0,0,0,10,2^int(data['station']),1] # 8th bit = 1 for sunrise
         gv.pd.append(newrise)
