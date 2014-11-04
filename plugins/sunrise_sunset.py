@@ -88,7 +88,7 @@ def create_program(data):
     for i, p in enumerate(gv.pd):  # get both index and prog item
         print i,": ",p
         try:
-            p[8] # Flag to demarcate the auto generated program
+            p[7] # Flag to demarcate the auto generated program
         except IndexError as e:
             print e
             pass
