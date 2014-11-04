@@ -87,7 +87,7 @@ def create_program(data):
     for i, p in enumerate(gv.pd):  # get both index and prog item
         try:
             p[8] # Flag to demarcate the auto generated program
-        except NameError:
+        except IndexError:
             del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
