@@ -88,7 +88,7 @@ def create_program(data):
     for i, p in enumerate(gv.pd):  # get both index and prog item
         print i,": ",p
         try:
-            p[7] # Flag to demarcate the auto generated program
+            p[8] # Flag to demarcate the auto generated program
         except IndexError as e:
             print e
             pass
@@ -97,9 +97,9 @@ def create_program(data):
             del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
-        newrise = [1,127,0,0,0,0,10,1] # 8th bit = 1 for sunrise
+        newrise = [1,127,0,0,0,0,10,8,1] # 8th bit = 1 for sunrise
         gv.pd.append(newrise)
-        newset = [1,127,0,0,0,0,20,2] # 8th bit = 2 for sunset
+        newset = [1,127,0,0,0,0,20,8,2] # 8th bit = 2 for sunset
         gv.pd.append(newset)
 
     return True
