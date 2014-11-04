@@ -24,6 +24,7 @@ sunrise = str(ephem.localtime(o.next_rising(s)))
 sunrise = sunrise.split(' ')
 sunrise = sunrise[1].split(":")
 if (int(sunrise[0])<13):
+	sunrise[0] = str(int(sunrise[0]))
 	sunrise[2] = 'AM' 
 else:
 	sunrise[0] = str(int(sunrise[0])-12)
@@ -33,6 +34,7 @@ sunset = str(ephem.localtime(o.next_setting(s)))
 sunset = sunset.split(' ')
 sunset = sunset[1].split(":")
 if (int(sunset[0])<13):
+	sunset[0] = str(int(sunrise[0]))
 	sunset[2] = 'AM' 
 else:
 	sunset[0] = str(int(sunset[0])-12)
