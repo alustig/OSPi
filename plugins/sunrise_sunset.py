@@ -89,7 +89,7 @@ def create_program(data):
             p[8] # Flag to demarcate the auto generated program
         except IndexError:
             pass
-        else
+        else:
             del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
