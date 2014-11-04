@@ -83,20 +83,21 @@ def options_data():
     return result
 
 def create_program(data):
-    print "Current programs:",gv.pd
-    print "Creating programs..."
     # Add/modify a program based on the user input
     for i, p in enumerate(gv.pd):  # get both index and prog item
-        print i,": ",p
         try:
             p[8] # Flag to demarcate the auto generated program
         except IndexError as e:
-            print e
-            continue
+            pass
         else:
-            print "Delete: ",i
             del gv.pd[i] # Remove the previously generated program
-            continue
+    for i, p in enumerate(gv.pd):  # get both index and prog item
+        try:
+            p[8] # Flag to demarcate the auto generated program
+        except IndexError as e:
+            pass
+        else:
+            del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         newrise = [1,127,0,0,0,0,10,8,1] # 8th bit = 1 for sunrise
