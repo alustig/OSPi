@@ -19,9 +19,8 @@ o.date = now
 o.lat=str(zipcode.latitude)
 o.long=str(zipcode.longitude)
 s=ephem.Sun()
-sunrise = str(ephem.localtime(o.next_rising(s)))
 
-print sunrise
+sunrise = str(ephem.localtime(o.next_rising(s)))
 sunrise = sunrise.split(' ')
 sunrise = sunrise[1].split(":")
 if (sunrise[0]<13):
@@ -30,7 +29,6 @@ else:
 	sunrise[0] = str(int(sunrise[0])-12)
 	sunrise[2] = 'PM'
 
-print sunset
 sunset = str(ephem.localtime(o.next_setting(s)))
 sunset = sunset.split(' ')
 sunset = sunset[1].split(":")
