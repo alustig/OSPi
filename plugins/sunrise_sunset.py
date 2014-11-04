@@ -95,6 +95,7 @@ def calculate(data):
     o.lat=str(zipcode.latitude)
     o.long=str(zipcode.longitude)
     s=ephem.Sun()
+    data['loc'] = zipcode.city+", "+zipcode.state
 
     sunrise = str(ephem.localtime(o.next_rising(s)))
     sunrise = sunrise.split(' ')
