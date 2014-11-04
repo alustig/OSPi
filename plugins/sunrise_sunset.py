@@ -53,7 +53,7 @@ class update(ProtectedPage):
             qdict['auto_ss'] = 'off'
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
-        create_program(sun_data)
+        create_program(qdict)
         raise web.seeother('/ss')
 
 
