@@ -103,14 +103,13 @@ def create_program(data):
 def calculate(data):
     zcdb = ZipCodeDatabase()
     local_zip = data['zip']
-    if local_zip == '':
-        local_zip = 10001 # New York
+
     try:
         zipcode = zcdb[local_zip]
     except IndexError:
         print "not a valid zip, using a default: 10001"
     else:
-        zipcode = zcdb[local_zip]
+        zipcode = zcdb[10001] # New York
     
 
     now = datetime.now()
