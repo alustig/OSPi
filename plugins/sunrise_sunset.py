@@ -97,6 +97,8 @@ def create_program(data):
         gv.pd.append(newset)
         break
 
+    return True
+
 
 def calculate(data):
     zcdb = ZipCodeDatabase()
