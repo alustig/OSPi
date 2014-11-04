@@ -42,7 +42,7 @@ class sunrise_sunset(ProtectedPage):
                 json.dump(sun_data, f)
 
         sun_data = calculate(sun_data)
-        create_program(sun_data)
+        #create_program(sun_data)
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
@@ -82,22 +82,7 @@ def options_data():
 
     return result
 
-def create_program(data):
-    # Add/modify a program based on the user input
-    for i, p in enumerate(gv.pd):  # get both index and prog item
-        try:
-            p[8] # Flag to demarcate the auto generated program
-        except NameError:
-            del gv.pd[i] # Remove the previously generated program
 
-    if data['auto_ss'] == 'on': # Plugin is enabled
-        newrise = [1,127,0,0,0,0,10,1] # 8th bit = 1 for sunrise
-        gv.pd.append(newrise)
-        newset = [1,127,0,0,0,0,20,2] # 8th bit = 2 for sunset
-        gv.pd.append(newset)
-        break
-
-    return True
 
 
 def calculate(data):
