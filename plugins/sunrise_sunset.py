@@ -69,7 +69,7 @@ def options_data():
         'sre': 0,
         'sss': 0,
         'sse': 0,
-        'station': ''
+        'station': -1
     }
     try:
         with open('./data/sunrise.json', 'r') as f:  # Read the settings from file
