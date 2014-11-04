@@ -83,6 +83,7 @@ def options_data():
     return result
 
 def create_program(data):
+    print "Current programs:",gv.pd
     print "Creating programs..."
     # Add/modify a program based on the user input
     for i, p in enumerate(gv.pd):  # get both index and prog item
