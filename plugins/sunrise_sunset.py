@@ -42,6 +42,7 @@ class sunrise_sunset(ProtectedPage):
                 json.dump(sun_data, f)
 
         sun_data = calculate(sun_data)
+        create_program(sun_data)
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
@@ -52,6 +53,7 @@ class update(ProtectedPage):
             qdict['auto_ss'] = 'off'
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
             json.dump(qdict, f)
+        create_program(sun_data)
         raise web.seeother('/ss')
 
 
@@ -79,6 +81,22 @@ def options_data():
         pass
 
     return result
+
+def create_program(data):
+    # Add/modify a program based on the user input
+    for i, p in enumerate(gv.pd):  # get both index and prog item
+        try:
+            p[8] # Flag to demarcate the auto generated program
+        except NameError:
+            del gv.pd[i] # Remove the previously generated program
+
+    if data['auto_ss'] == 'on': # Plugin is enabled
+        newrise = [1,127,0,0,0,0,10,1] # 8th bit = 1 for sunrise
+        gv.pd.append(newrise)
+        newset = [1,127,0,0,0,0,20,2] # 8th bit = 2 for sunset
+        gv.pd.append(newset)
+        break
+
 
 def calculate(data):
     zcdb = ZipCodeDatabase()
