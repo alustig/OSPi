@@ -107,16 +107,35 @@ def create_program(data):
         srstd = datetime.timedelta(0,0,0,0,int(data['srs']))
         sretd = datetime.timedelta(0,0,0,0,int(data['sre']))
         srs = srtime-srstd
-        sre = srstd+sretd
-        print srtime.time()
-        print srs.time()
-        print sre.time()
+        sre = srtime+srstd
+        srdur = (sre-srs).total_seconds()
+        print "Sunrise:",srtime.time()
+        print "On:",srs.time()
+        print "Off:",sre.time()
+        srs = str(srs.time()).split(":")
+        start = int(srs[0])*60+int(srs[1])
+        sre = str(sre.time()).split(":")
+        end = int(sre[0])*60+int(sre[1])
 
-        newrise = [1,127,0,0,0,0,10,2^int(data['station']),1] # 8th bit = 1 for sunrise
+        newrise = [1,127,0,start,end,0,srdur,2^int(data['station']),1] # 8th bit = 1 for sunrise
         gv.pd.append(newrise)
 
+        ss = data['ss'].split(":")
+        sstime = datetime.datetime(100,1,1,int(ss[0]),int(ss[1]))
+        ssstd = datetime.timedelta(0,0,0,0,int(data['sss']))
+        ssetd = datetime.timedelta(0,0,0,0,int(data['sse']))
+        sss = sstime-ssstd
+        sse = sstime+ssstd
+        ssdur = (sse-sss).total_seconds()
+        print "Sunrise:",sstime.time()
+        print "On:",sss.time()
+        print "Off:",sse.time()
+        sss = str(sss.time()).split(":")
+        start = int(sss[0])*60+int(sss[1])
+        sse = str(sse.time()).split(":")
+        end = int(sse[0])*60+int(sse[1])
 
-        newset = [1,127,0,0,0,0,20,2^int(data['station']),2] # 8th bit = 2 for sunset
+        newset = [1,127,0,start,end,0,ssdur,2^int(data['station']),2] # 8th bit = 2 for sunset
         gv.pd.append(newset)
 
     return True
