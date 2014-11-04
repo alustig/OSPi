@@ -40,6 +40,7 @@ class sunrise_sunset(ProtectedPage):
             sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
                 json.dump(sun_data, f)
+
         sun_data = calculate(sun_data)
         return template_render.sunrise(sun_data)
 

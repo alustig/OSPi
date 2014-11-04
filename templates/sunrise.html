@@ -24,7 +24,7 @@ $code:
     <p>Fill out the info below to create and daily adjust a program based on your location</p>
     <form id="pluginForm" action="/uss" method="get">
         Enable this plugin: <input name='auto_ss' type='checkbox'${" checked" if m_vals['auto_ss'] == "on" else ""}> 
-        <table class="optionList">
+        <table class="optionList" style="float: left">
             <tr>
                 <td style='text-transform: none; text-align: right;'>Zip Code:</td>
                 <td><input type="text" name="zip" value=$m_vals["zip"]></td>
@@ -58,6 +58,12 @@ $code:
                 <td><input type="text" name="sse" value=$m_vals["sse"]></td>
             </tr>
         </table>
+
+        <div>
+            Next sunrise will be at: <span style="font-weight: bold;">$m_vals['sunrise']</span><br/>
+            Next sunset will be at: <span style="font-weight: bold;">$m_vals['sunset']</span><br/>
+        </div>
+
         ${gv.pd}<br/>
         <hr>
         
