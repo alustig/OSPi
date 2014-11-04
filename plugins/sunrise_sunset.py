@@ -121,13 +121,21 @@ def create_program(data):
         gv.pd.append(newrise)
 
         ss = data['ss'].split(":")
+        ss = map(int, ss)
         sstime = datetime.datetime(100,1,1,int(ss[0]),int(ss[1]))
+        sse = data['sse'].split(":")
+        sse = map(int, sse)
+        if ss[1] > sse[1]:
+            sse[1] += 60
+            ss[0] -= 1
+        ssh = sse[0]-ss[0]
+        ssm = sse[1]-ss[1]
         ssstd = datetime.timedelta(0,0,0,0,int(data['sss']))
-        ssetd = datetime.timedelta(0,0,0,0,int(data['sse']))
+        ssetd = datetime.timedelta(0,0,0,0,ssh*60+ssm)
         sss = sstime-ssstd
         sse = sstime+ssstd
         ssdur = (sse-sss).total_seconds()
-        print "Sunrise:",sstime.time()
+        print "Sunset:",sstime.time()
         print "On:",sss.time()
         print "Off:",sse.time()
         sss = str(sss.time()).split(":")
