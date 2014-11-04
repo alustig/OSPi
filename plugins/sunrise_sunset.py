@@ -133,7 +133,7 @@ def create_program(data):
         ssstd = datetime.timedelta(0,0,0,0,int(data['sss']))
         ssetd = datetime.timedelta(0,0,0,0,ssh*60+ssm)
         sss = sstime-ssstd
-        sse = sstime+ssstd
+        sse = sstime+ssetd
         ssdur = (sse-sss).total_seconds()
         print "Sunset:",sstime.time()
         print "On:",sss.time()
