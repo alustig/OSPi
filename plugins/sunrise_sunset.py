@@ -101,7 +101,7 @@ def create_program(data):
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
-        srtime = datetime.datetime(100,1,1,int(sr[0]),int(sr[1])
+        srtime = datetime.datetime(100,1,1,int(sr[0]),int(sr[1]))
         srstd = datetime.timedelta(0,0,0,0,data['srs'])
         sretd = datetime.timedelta(0,0,0,0,data['sre'])
         srs = srtime-srstd
