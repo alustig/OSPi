@@ -104,7 +104,13 @@ def calculate(data):
     local_zip = data['zip']
     if local_zip == '':
         local_zip = 10001 # New York
-    zipcode = zcdb[local_zip]
+    try:
+        zipcode = zcdb[local_zip]
+    except IndexError:
+        print "not a valid zip, using a default: 10001"
+    else:
+        zipcode = zcdb[local_zip]
+    
 
     now = datetime.now()
     o = ephem.Observer()
