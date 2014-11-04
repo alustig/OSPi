@@ -89,7 +89,8 @@ def create_program(data):
         print i,": ",p
         try:
             p[8] # Flag to demarcate the auto generated program
-        except IndexError:
+        except IndexError as e:
+            print "IndexError({0}): {1}".format(e.errno, e.strerror)
             pass
         else:
             print "Delete: ",i
