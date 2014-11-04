@@ -91,16 +91,7 @@ def create_program(data):
             p[8] # Flag to demarcate the auto generated program
         except IndexError as e:
             print e
-        else:
-            print "Delete: ",i
-            del gv.pd[i] # Remove the previously generated program
-            
-    for i, p in enumerate(gv.pd):  # get both index and prog item
-        print i,": ",p
-        try:
-            p[8] # Flag to demarcate the auto generated program
-        except IndexError as e:
-            print e
+            continue
         else:
             print "Delete: ",i
             del gv.pd[i] # Remove the previously generated program
