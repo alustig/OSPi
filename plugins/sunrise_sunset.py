@@ -144,7 +144,7 @@ def calculate(data):
     sunrise = str(ephem.localtime(o.next_rising(s)))
     sunrise = sunrise.split(' ')
     sunrise = sunrise[1].split(":")
-    data['sr'] = sunrise[0]+":"sunrise[1]
+    data['sr'] = sunrise[0]+":"+sunrise[1]
     if (int(sunrise[0])<13):
         sunrise[0] = str(int(sunrise[0]))
         sunrise[2] = 'AM' 
@@ -155,7 +155,7 @@ def calculate(data):
     sunset = str(ephem.localtime(o.next_setting(s)))
     sunset = sunset.split(' ')
     sunset = sunset[1].split(":")
-    data['ss'] = sunset[0]+":"sunset[1]
+    data['ss'] = sunset[0]+":"+sunset[1]
     if (int(sunset[0])<13):
         sunset[0] = str(int(sunrise[0]))
         sunset[2] = 'AM' 
