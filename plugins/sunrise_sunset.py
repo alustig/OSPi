@@ -40,43 +40,7 @@ class sunrise_sunset(ProtectedPage):
             sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
                 json.dump(sun_data, f)
-        zcdb = ZipCodeDatabase()
-        zip_local = sun_data['zip']
-        zipcode = zcdb[23229]
-
-        now = datetime.now()
-        o = ephem.Observer()
-        o.pressure = 0
-        o.horizon = '-0:34'
-        o.date = now
-        o.lat=str(zipcode.latitude)
-        o.long=str(zipcode.longitude)
-        s=ephem.Sun()
-
-        sunrise = str(ephem.localtime(o.next_rising(s)))
-        sunrise = sunrise.split(' ')
-        sunrise = sunrise[1].split(":")
-        if (int(sunrise[0])<13):
-            sunrise[0] = str(int(sunrise[0]))
-            sunrise[2] = 'AM' 
-        else:
-            sunrise[0] = str(int(sunrise[0])-12)
-            sunrise[2] = 'PM'
-
-        sunset = str(ephem.localtime(o.next_setting(s)))
-        sunset = sunset.split(' ')
-        sunset = sunset[1].split(":")
-        if (int(sunset[0])<13):
-            sunset[0] = str(int(sunrise[0]))
-            sunset[2] = 'AM' 
-        else:
-            sunset[0] = str(int(sunset[0])-12)
-            sunset[2] = 'PM'
-
-        srise = sunrise[0]+":"+sunrise[1]+" "+sunrise[2]
-        sset = sunset[0]+":"+sunset[1]+" "+sunset[2]
-        print "Rising ",srise
-        print "Setting ",sset
+        sun_data = calculate(sun_data)
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
@@ -114,3 +78,48 @@ def options_data():
         pass
 
     return result
+
+def calculate(data):
+    zcdb = ZipCodeDatabase()
+    local_zip = data['zip']
+    if local_zip == '':
+        local_zip = 10001 # New York
+    zipcode = zcdb[local_zip]
+
+    now = datetime.now()
+    o = ephem.Observer()
+    o.pressure = 0
+    o.horizon = '-0:34'
+    o.date = now
+    o.lat=str(zipcode.latitude)
+    o.long=str(zipcode.longitude)
+    s=ephem.Sun()
+
+    sunrise = str(ephem.localtime(o.next_rising(s)))
+    sunrise = sunrise.split(' ')
+    sunrise = sunrise[1].split(":")
+    if (int(sunrise[0])<13):
+        sunrise[0] = str(int(sunrise[0]))
+        sunrise[2] = 'AM' 
+    else:
+        sunrise[0] = str(int(sunrise[0])-12)
+        sunrise[2] = 'PM'
+
+    sunset = str(ephem.localtime(o.next_setting(s)))
+    sunset = sunset.split(' ')
+    sunset = sunset[1].split(":")
+    if (int(sunset[0])<13):
+        sunset[0] = str(int(sunrise[0]))
+        sunset[2] = 'AM' 
+    else:
+        sunset[0] = str(int(sunset[0])-12)
+        sunset[2] = 'PM'
+
+    srise = sunrise[0]+":"+sunrise[1]+" "+sunrise[2]
+    sset = sunset[0]+":"+sunset[1]+" "+sunset[2]
+    print "Rising ",srise
+    print "Setting ",sset
+    data ['sunrise'] = srise
+    data ['sunset'] = sset
+
+    return data
