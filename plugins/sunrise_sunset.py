@@ -42,7 +42,6 @@ class sunrise_sunset(ProtectedPage):
                 json.dump(sun_data, f)
 
         sun_data = calculate(sun_data)
-        create_program(sun_data)
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
