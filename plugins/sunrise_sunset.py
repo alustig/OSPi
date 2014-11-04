@@ -95,6 +95,7 @@ def create_program(data):
         else:
             print "Delete: ",i
             del gv.pd[i] # Remove the previously generated program
+            continue
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         newrise = [1,127,0,0,0,0,10,8,1] # 8th bit = 1 for sunrise
