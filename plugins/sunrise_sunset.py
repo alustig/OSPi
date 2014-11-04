@@ -5,7 +5,7 @@ import json
 import time
 import ephem, sys
 from pyzipcode import ZipCodeDatabase
-from datetime import datetime
+import datetime
 
 import web
 import gv  # Get access to ospi's settings
@@ -100,9 +100,21 @@ def create_program(data):
             del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
-        newrise = [1,127,0,0,0,0,10,8,1] # 8th bit = 1 for sunrise
+        sr = data['sr'].split(":")
+        srtime = datetime.datetime(100,1,1,int(sr[0]),int(sr[1])
+        srstd = datetime.timedelta(0,0,0,0,data['srs'])
+        sretd = datetime.timedelta(0,0,0,0,data['sre'])
+        srs = srtime-srstd
+        sre = srstd+sretd
+        print srtime.datetime.time()
+        print srs.datetime.time()
+        print sre.datetime.time()
+
+        newrise = [1,127,0,0,0,0,10,2^data['station'],1] # 8th bit = 1 for sunrise
         gv.pd.append(newrise)
-        newset = [1,127,0,0,0,0,20,8,2] # 8th bit = 2 for sunset
+
+
+        newset = [1,127,0,0,0,0,20,2^data['station'],2] # 8th bit = 2 for sunset
         gv.pd.append(newset)
 
     return True
@@ -119,7 +131,7 @@ def calculate(data):
         print "not a valid zip, using a default: 10001"
         zipcode = zcdb[10001] # New York    
 
-    now = datetime.now()
+    now = datetime.datetime.now()
     o = ephem.Observer()
     o.pressure = 0
     o.horizon = '-0:34'
@@ -132,6 +144,7 @@ def calculate(data):
     sunrise = str(ephem.localtime(o.next_rising(s)))
     sunrise = sunrise.split(' ')
     sunrise = sunrise[1].split(":")
+    data['sr'] = sunrise[0]+":"sunrise[1]
     if (int(sunrise[0])<13):
         sunrise[0] = str(int(sunrise[0]))
         sunrise[2] = 'AM' 
@@ -142,6 +155,7 @@ def calculate(data):
     sunset = str(ephem.localtime(o.next_setting(s)))
     sunset = sunset.split(' ')
     sunset = sunset[1].split(":")
+    data['ss'] = sunset[0]+":"sunset[1]
     if (int(sunset[0])<13):
         sunset[0] = str(int(sunrise[0]))
         sunset[2] = 'AM' 
@@ -153,7 +167,7 @@ def calculate(data):
     sset = sunset[0]+":"+sunset[1]+" "+sunset[2]
     print "Rising ",srise
     print "Setting ",sset
-    data ['sunrise'] = srise
-    data ['sunset'] = sset
+    data['sunrise'] = srise
+    data['sunset'] = sset
 
     return data
