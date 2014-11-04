@@ -103,7 +103,8 @@ def create_program(data):
 def calculate(data):
     zcdb = ZipCodeDatabase()
     local_zip = data['zip']
-
+    zipcode = 0
+    
     try:
         zipcode = zcdb[local_zip]
     except IndexError:
