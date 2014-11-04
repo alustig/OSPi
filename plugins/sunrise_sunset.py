@@ -90,6 +90,7 @@ def create_program(data):
         except IndexError:
             pass
         else:
+            print "Plugin is off delete: ",i
             del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
