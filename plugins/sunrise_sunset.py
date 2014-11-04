@@ -89,7 +89,8 @@ def create_program(data):
             p[8] # Flag to demarcate the auto generated program
         except IndexError:
             pass
-        del gv.pd[i] # Remove the previously generated program
+        else
+            del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         newrise = [1,127,0,0,0,0,10,1] # 8th bit = 1 for sunrise
