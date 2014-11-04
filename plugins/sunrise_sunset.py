@@ -66,10 +66,10 @@ def options_data():
     result = {
         'auto_ss': 'off',
         'zip': '',
-        'srs': '',
-        'sre': '',
-        'sss': '',
-        'sse': '',
+        'srs': 0,
+        'sre': 0,
+        'sss': 0,
+        'sse': 0,
         'station': ''
     }
     try:
