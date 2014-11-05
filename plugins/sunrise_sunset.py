@@ -43,12 +43,12 @@ class SunriseSunset(Thread):
 
         try:
             with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
-                self.sun_data = json.load(f)
+                sun_data = json.load(f)
         except IOError:  # If file does not exist create the defaults
-            self.sun_data = options_data()
+            sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
-                json.dump(self.sun_data, f)
-        print self.sun_data
+                json.dump(sun_data, f)
+        print sun_data
 
     def add_status(self, msg):
         if self.status:
@@ -66,17 +66,14 @@ class SunriseSunset(Thread):
             time.sleep(1)
             self._sleep_time -= 1
 
-    def setData(data):
-        self.sun_data = data
-
     def run(self):
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
-            if self.sun_data['auto_ss'] == 'on': # Plugin is enabled
+            if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun_data")
-                self.sun_data = calculate()
-                create_program(self.sun_data)
+                sun_data = calculate(sun_data)
+                create_program(sun_data)
                 self._sleep(5)
         time.sleep(0.5)
 
@@ -91,7 +88,6 @@ class sunrise_sunset(ProtectedPage):
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
-    global sunny
     """Save user input to sunrise.json file"""
     def GET(self):
         qdict = web.input()
@@ -100,8 +96,7 @@ class update(ProtectedPage):
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
             sun_data = calculate(qdict)
             json.dump(sun_data, f)
-        sunny.setData(sun_data)
-        create_program(sunny)
+        create_program(sun_data)
         raise web.seeother('/ss')
 
 
@@ -131,10 +126,8 @@ def options_data():
 
     return result
 
-def create_program(obj):
+def create_program(data):
     # Add/modify a program based on the user input
-
-    data = obj.sun_data
     gv.pd[:] = list(ifilterfalse(determine, gv.pd))
 
     if data['auto_ss'] == 'on': # Plugin is enabled
@@ -189,8 +182,7 @@ def create_program(obj):
     return True
 
 
-def calculate(obj):
-    data = obj.sun_data
+def calculate(data):
     zcdb = ZipCodeDatabase()
     local_zip = data['zip']
     zipcode = 0
