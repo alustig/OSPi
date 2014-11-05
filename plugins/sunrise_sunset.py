@@ -89,6 +89,7 @@ def create_program(data):
     for i, p in enumerate(gv.pd):  # get both index and prog item
         if p[0] == 2:
             del gv.pd[i] # Remove the previously generated program
+            i-=1
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
