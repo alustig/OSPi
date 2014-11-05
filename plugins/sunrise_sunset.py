@@ -53,6 +53,7 @@ class SunriseSunset(Thread):
     def _sleep(self, secs):
         self._sleep_time = secs
         while self._sleep_time > 0:
+            print self._sleep_time
             if self._sleep_time % 36000 == 0:
                 print self._sleep_time/3600,"mins left"
             time.sleep(1)
@@ -68,7 +69,6 @@ class SunriseSunset(Thread):
             sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
                 json.dump(sun_data, f)
-        print sun_data
 
         while True:
             print  "Plugin is:",sun_data['auto_ss']
