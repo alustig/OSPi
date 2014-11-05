@@ -132,11 +132,9 @@ def options_data():
 
     return result
 
-def create_program():
+def create_program(data):
     # Add/modify a program based on the user input
     #gv.pd[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
-    global sun_data
-    data = sun_data
     gv.pd[:] = list(ifilterfalse(determine, gv.pd))
 
     if data['auto_ss'] == 'on': # Plugin is enabled
