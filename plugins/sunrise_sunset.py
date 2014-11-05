@@ -86,10 +86,8 @@ def options_data():
 
 def create_program(data):
     # Add/modify a program based on the user input
-    for i, p in enumerate(gv.pd):  # get both index and prog item
-        if p[0] == 2:
-            del gv.pd[i] # Remove the previously generated program
-            i-=1
+    
+    gv[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
@@ -194,3 +192,9 @@ def calculate(data):
     data['sunset'] = sset
 
     return data
+
+def determine(a):
+    for i in a:
+        if i == 2:
+            return True
+    return False
