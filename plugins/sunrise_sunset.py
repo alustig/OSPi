@@ -77,6 +77,7 @@ class SunriseSunset(Thread):
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun_data")
                 sun_data = calculate()
+                create_program()
                 self._sleep(5)
         time.sleep(0.5)
 
@@ -131,10 +132,11 @@ def options_data():
 
     return result
 
-def create_program(data):
+def create_program():
     # Add/modify a program based on the user input
-    #gv.pd[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
-    gv.pd[:] = list(ifilterfalse(determine, gv.pd))
+    global sun_data
+    data = sun_data
+    gv.pd[:] = list(ifilterfalse(determine, gv.pd)) # Remove prevously generated programs
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
