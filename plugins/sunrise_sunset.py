@@ -87,18 +87,7 @@ def options_data():
 def create_program(data):
     # Add/modify a program based on the user input
     for i, p in enumerate(gv.pd):  # get both index and prog item
-        try:
-            p[8] # Flag to demarcate the auto generated program
-        except IndexError as e:
-            pass
-        else:
-            del gv.pd[i] # Remove the previously generated program
-    for i, p in enumerate(gv.pd):  # get both index and prog item
-        try:
-            p[8] # Flag to demarcate the auto generated program
-        except IndexError as e:
-            pass
-        else:
+        if p[0] == 2
             del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
@@ -118,7 +107,7 @@ def create_program(data):
         sre = str(sre.time()).split(":")
         end = int(sre[0])*60+int(sre[1])
 
-        newrise = [1,127,0,start,end,0,srdur,2^int(data['station']),1] # 8th bit = 1 for sunrise
+        newrise = [2,127,0,start,end,0,int(srdur),int(math.pow(2,data['station']))] # 1st bit = 2 for sunrise
         gv.pd.append(newrise)
 
         ss = data['ss'].split(":")
@@ -146,7 +135,7 @@ def create_program(data):
         sse = str(sse.time()).split(":")
         end = int(sse[0])*60+int(sse[1])
 
-        newset = [1,127,0,start,end,0,ssdur,2^int(data['station']),2] # 8th bit = 2 for sunset
+        newset = [2,127,0,start,end,0,int(ssdur),int(math.pow(2,data['station']))] # 1st bit = 2 for sunset
         gv.pd.append(newset)
 
     return True
