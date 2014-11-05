@@ -87,7 +87,7 @@ def options_data():
 def create_program(data):
     # Add/modify a program based on the user input
     for i, p in enumerate(gv.pd):  # get both index and prog item
-        if p[0] == 2
+        if p[0] == 2:
             del gv.pd[i] # Remove the previously generated program
 
     if data['auto_ss'] == 'on': # Plugin is enabled
