@@ -83,6 +83,8 @@ sunny = SunriseSunset()
 class sunrise_sunset(ProtectedPage):
     """Load an html page for entering zip code and choosing station"""
     def GET(self):
+        with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
+            sun_data = json.load(f)
         sun_data = calculate(sun_data)
         return template_render.sunrise(sun_data)
 
