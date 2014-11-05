@@ -32,53 +32,7 @@ urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.su
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 
-sun_data = []
-
-class SunriseSunset(Thread):
-    global sun_data
-    def __init__(self):
-        Thread.__init__(self)
-        self.daemon = True
-        self.start()
-        self.status = ''
-
-        self._sleep_time = 0
-
-        try:
-            with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
-                sun_data = json.load(f)
-        except IOError:  # If file does not exist create the defaults
-            sun_data = options_data()
-            with open('./data/sunrise.json', 'w') as f:  # write default data to file
-                json.dump(sun_data, f)
-
-    def add_status(self, msg):
-        if self.status:
-            self.status += '\n' + msg
-        else:
-            self.status = msg
-        print msg
-
-    def update(self):
-        self._sleep_time = 0
-
-    def _sleep(self, secs):
-        self._sleep_time = secs
-        while self._sleep_time > 0:
-            time.sleep(1)
-            self._sleep_time -= 1
-
-    def run(self):
-        #time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
-
-        while True:
-            sun_data = calculate()
-            self._sleep(5)
-        time.sleep(0.5)
-
-
-sunny = SunriseSunset()
-
+sun_data = 0
 
 class sunrise_sunset(ProtectedPage):
     """Load an html page for entering zip code and choosing station"""
