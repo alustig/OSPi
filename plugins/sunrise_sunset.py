@@ -51,6 +51,7 @@ class SunriseSunset(Thread):
             sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
                 json.dump(sun_data, f)
+        print sun_data
 
     def add_status(self, msg):
         if self.status:
