@@ -53,7 +53,6 @@ class SunriseSunset(Thread):
     def _sleep(self, secs):
         self._sleep_time = secs
         while self._sleep_time > 0:
-            print self._sleep_time % 36000
             if self._sleep_time % 36000 == 0:
                 print self._sleep_time/3600,"mins left"
             time.sleep(1)
