@@ -86,8 +86,9 @@ def options_data():
 
 def create_program(data):
     # Add/modify a program based on the user input
-    
-    gv.pd[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
+    progs = gv.pd
+    progs[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
+    gv.pd = progs
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
