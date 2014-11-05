@@ -34,6 +34,57 @@ gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 
 sun_data = 0
 
+class SunriseSunset(Thread):
+    def __init__(self):
+        global sun_data
+        Thread.__init__(self)
+        self.daemon = True
+        self.start()
+        self.status = ''
+
+        self._sleep_time = 0
+
+        try:
+            with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
+                sun_data = json.load(f)
+        except IOError:  # If file does not exist create the defaults
+            sun_data = options_data()
+            with open('./data/sunrise.json', 'w') as f:  # write default data to file
+                json.dump(sun_data, f)
+        print sun_data
+
+    def add_status(self, msg):
+        if self.status:
+            self.status += '\n' + msg
+        else:
+            self.status = msg
+        print msg
+
+    def update(self):
+        self._sleep_time = 0
+
+    def _sleep(self, secs):
+        self._sleep_time = secs
+        while self._sleep_time > 0:
+            time.sleep(1)
+            self._sleep_time -= 1
+
+    def run(self):
+        global sun_data
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
+
+        while True:
+            if sun_data['auto_ss'] == 'on': # Plugin is enabled
+                self.add_status("Calculating sun_data")
+                sun_data = calculate()
+                create_program(sun_data)
+                self._sleep(5)
+        time.sleep(0.5)
+
+
+sunny = SunriseSunset()
+
+
 class sunrise_sunset(ProtectedPage):
     """Load an html page for entering zip code and choosing station"""
     global sun_data
@@ -51,7 +102,7 @@ class update(ProtectedPage):
             sun_data = calculate(qdict)
             json.dump(sun_data, f)
         
-        create_program(sun_data)
+        create_program()
         raise web.seeother('/ss')
 
 
