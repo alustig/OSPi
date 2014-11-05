@@ -32,11 +32,10 @@ urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.su
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 
-sun_data = 0
+sun_data = []
 
 class SunriseSunset(Thread):
     def __init__(self):
-        global sun_data
         Thread.__init__(self)
         self.daemon = True
         self.start()
@@ -70,7 +69,7 @@ class SunriseSunset(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        global sun_data
+        
         #time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
