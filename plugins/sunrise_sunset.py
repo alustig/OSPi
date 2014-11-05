@@ -2,11 +2,11 @@
 from random import randint
 import thread
 import json
+import time
 import ephem, sys
 from pyzipcode import ZipCodeDatabase
 from itertools import ifilterfalse
 import datetime, math
-import time
 
 import web
 import gv  # Get access to ospi's settings
@@ -70,14 +70,13 @@ class SunriseSunset(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        global sun_data
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun_data")
                 sun_data = calculate()
-                create_program()
+                create_program(sun_data)
                 self._sleep(5)
         time.sleep(0.5)
 
@@ -102,7 +101,7 @@ class update(ProtectedPage):
             sun_data = calculate(qdict)
             json.dump(sun_data, f)
         
-        create_program(sun_data)
+        create_program()
         raise web.seeother('/ss')
 
 
