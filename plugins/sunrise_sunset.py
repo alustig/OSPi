@@ -53,6 +53,7 @@ class SunriseSunset(Thread):
     def _sleep(self, secs):
         self._sleep_time = secs
         while self._sleep_time > 0:
+            print self._sleep_time
             time.sleep(1)
             self._sleep_time -= 1
 
@@ -69,6 +70,7 @@ class SunriseSunset(Thread):
         print sun_data
 
         while True:
+            print  "Plugin is: ",sun_data['auto_ss']
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
                     sun_data = json.load(f)
