@@ -5,6 +5,7 @@ import json
 import time
 import ephem, sys
 from pyzipcode import ZipCodeDatabase
+from itertools import ifilterfalse
 import datetime, math
 
 import web
@@ -86,9 +87,8 @@ def options_data():
 
 def create_program(data):
     # Add/modify a program based on the user input
-    progs = gv.pd
-    progs[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
-    gv.pd = progs
+    #gv.pd[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
+    gv.pd[:] = list(ifilterfalse(determine, gv.pd))
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
