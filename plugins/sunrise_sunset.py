@@ -195,7 +195,9 @@ def calculate(data):
     return data
 
 def determine(a):
+    c=0
     for i in a:
-        if i == 2:
+        if i == 2 and c == 0:
             return True
+        c+=1
     return False
