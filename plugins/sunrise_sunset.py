@@ -2,11 +2,11 @@
 from random import randint
 import thread
 import json
-import time
 import ephem, sys
 from pyzipcode import ZipCodeDatabase
 from itertools import ifilterfalse
 import datetime, math
+import time
 
 import web
 import gv  # Get access to ospi's settings
