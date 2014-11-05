@@ -32,8 +32,6 @@ urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.su
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 
-sun_data = []
-
 class SunriseSunset(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -42,17 +40,15 @@ class SunriseSunset(Thread):
         self.status = ''
 
         self._sleep_time = 0
-        
-        global sun_data
 
         try:
             with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
-                sun_data = json.load(f)
+                self.sun_data = json.load(f)
         except IOError:  # If file does not exist create the defaults
-            sun_data = options_data()
+            self.sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
-                json.dump(sun_data, f)
-        print sun_data
+                json.dump(self.sun_data, f)
+        print self.sun_data
 
     def add_status(self, msg):
         if self.status:
@@ -70,15 +66,17 @@ class SunriseSunset(Thread):
             time.sleep(1)
             self._sleep_time -= 1
 
+    def setData(data):
+        self.sun_data = data
+
     def run(self):
-        global sun_data
-        #time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun_data")
-                sun_data = calculate()
-                create_program(sun_data)
+                self.sun_data = calculate()
+                create_program(self.sun_data)
                 self._sleep(5)
         time.sleep(0.5)
 
@@ -88,12 +86,12 @@ sunny = SunriseSunset()
 
 class sunrise_sunset(ProtectedPage):
     """Load an html page for entering zip code and choosing station"""
-    global sun_data
     def GET(self):
         sun_data = calculate()
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
+    global sunny
     """Save user input to sunrise.json file"""
     def GET(self):
         qdict = web.input()
@@ -102,8 +100,8 @@ class update(ProtectedPage):
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
             sun_data = calculate(qdict)
             json.dump(sun_data, f)
-        
-        create_program()
+        sunny.setData(sun_data)
+        create_program(sunny)
         raise web.seeother('/ss')
 
 
@@ -133,9 +131,10 @@ def options_data():
 
     return result
 
-def create_program(data):
+def create_program(obj):
     # Add/modify a program based on the user input
-    #gv.pd[:] = [x for x in gv if not determine(x)] # Remove prevously generated programs
+
+    data = obj.sun_data
     gv.pd[:] = list(ifilterfalse(determine, gv.pd))
 
     if data['auto_ss'] == 'on': # Plugin is enabled
@@ -190,9 +189,8 @@ def create_program(data):
     return True
 
 
-def calculate():
-    global sun_data
-    data = sun_data
+def calculate(obj):
+    data = obj.sun_data
     zcdb = ZipCodeDatabase()
     local_zip = data['zip']
     zipcode = 0
