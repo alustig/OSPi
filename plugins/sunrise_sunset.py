@@ -38,17 +38,7 @@ class SunriseSunset(Thread):
         self.daemon = True
         self.start()
         self.status = ''
-
         self._sleep_time = 0
-
-        try:
-            with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
-                sun_data = json.load(f)
-        except IOError:  # If file does not exist create the defaults
-            sun_data = options_data()
-            with open('./data/sunrise.json', 'w') as f:  # write default data to file
-                json.dump(sun_data, f)
-        print sun_data
 
     def add_status(self, msg):
         if self.status:
@@ -68,6 +58,15 @@ class SunriseSunset(Thread):
 
     def run(self):
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
+        
+        try:
+            with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
+                sun_data = json.load(f)
+        except IOError:  # If file does not exist create the defaults
+            sun_data = options_data()
+            with open('./data/sunrise.json', 'w') as f:  # write default data to file
+                json.dump(sun_data, f)
+        print sun_data
 
         while True:
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
