@@ -36,7 +36,7 @@ sun_data = []
 
 class SunriseSunset(Thread):
     def __init__(self):
-        global sun_data
+        
         Thread.__init__(self)
         self.daemon = True
         self.start()
@@ -70,6 +70,7 @@ class SunriseSunset(Thread):
             self._sleep_time -= 1
 
     def run(self):
+        
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
