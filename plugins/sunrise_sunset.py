@@ -35,8 +35,8 @@ gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 sun_data = []
 
 class SunriseSunset(Thread):
+    global sun_data
     def __init__(self):
-        
         Thread.__init__(self)
         self.daemon = True
         self.start()
@@ -51,7 +51,6 @@ class SunriseSunset(Thread):
             sun_data = options_data()
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
                 json.dump(sun_data, f)
-        print sun_data
 
     def add_status(self, msg):
         if self.status:
@@ -70,15 +69,11 @@ class SunriseSunset(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
-            if sun_data['auto_ss'] == 'on': # Plugin is enabled
-                self.add_status("Calculating sun_data")
-                sun_data = calculate()
-                create_program(sun_data)
-                self._sleep(5)
+            sun_data = calculate()
+            self._sleep(5)
         time.sleep(0.5)
 
 
@@ -102,7 +97,7 @@ class update(ProtectedPage):
             sun_data = calculate(qdict)
             json.dump(sun_data, f)
         
-        create_program()
+        create_program(sun_data)
         raise web.seeother('/ss')
 
 
