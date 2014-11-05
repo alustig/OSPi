@@ -71,11 +71,11 @@ class SunriseSunset(Thread):
         print sun_data
 
         while True:
-            print  "Plugin is: ",sun_data['auto_ss']
+            print  "Plugin is:",sun_data['auto_ss']
             with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
                     sun_data = json.load(f)
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
-                self.add_status("Calculating sun_data")
+                self.add_status("Calculating sun data")
                 sun_data = calculate(sun_data)
                 create_program(sun_data)
                 self._sleep(12*60*60)
@@ -102,7 +102,7 @@ class update(ProtectedPage):
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
             sun_data = calculate(qdict)
             json.dump(sun_data, f)
-        create_program(sun_data)
+        sunny.update()
         raise web.seeother('/ss')
 
 
@@ -233,8 +233,6 @@ def calculate(data):
 
     srise = sunrise[0]+":"+sunrise[1]+" "+sunrise[2]
     sset = sunset[0]+":"+sunset[1]+" "+sunset[2]
-    print "Rising ",srise
-    print "Setting ",sset
     data['sunrise'] = srise
     data['sunset'] = sset
 
