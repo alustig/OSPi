@@ -69,7 +69,7 @@ class SunriseSunset(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
+        #time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
             sun_data = calculate()
