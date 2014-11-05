@@ -73,7 +73,7 @@ class SunriseSunset(Thread):
         time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
-            if sun_data['auto_ss'] == 'on': # Plugin is enabled
+            if self.sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun_data")
                 self.sun_data = calculate()
                 create_program(self.sun_data)
