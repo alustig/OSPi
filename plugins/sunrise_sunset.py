@@ -107,7 +107,8 @@ def create_program(data):
         sre = str(sre.time()).split(":")
         end = int(sre[0])*60+int(sre[1])
 
-        newrise = [2,127,0,start,end,0,int(srdur),int(math.pow(2,data['station']))] # 1st bit = 2 for sunrise
+        station = int(math.pow(2,int(data['station'])))
+        newrise = [2,127,0,start,end,0,int(srdur),station] # 1st bit = 2 for sunrise
         gv.pd.append(newrise)
 
         ss = data['ss'].split(":")
@@ -135,7 +136,7 @@ def create_program(data):
         sse = str(sse.time()).split(":")
         end = int(sse[0])*60+int(sse[1])
 
-        newset = [2,127,0,start,end,0,int(ssdur),int(math.pow(2,data['station']))] # 1st bit = 2 for sunset
+        newset = [2,127,0,start,end,0,int(ssdur),station] # 1st bit = 2 for sunset
         gv.pd.append(newset)
 
     return True
