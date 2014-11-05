@@ -35,7 +35,6 @@ gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 sun_data = []
 
 class SunriseSunset(Thread):
-    global sun_data
     def __init__(self):
         Thread.__init__(self)
         self.daemon = True
@@ -43,6 +42,8 @@ class SunriseSunset(Thread):
         self.status = ''
 
         self._sleep_time = 0
+        
+        global sun_data
 
         try:
             with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
@@ -70,7 +71,7 @@ class SunriseSunset(Thread):
             self._sleep_time -= 1
 
     def run(self):
-        
+        global sun_data
         #time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
         while True:
