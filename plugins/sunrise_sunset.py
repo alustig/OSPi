@@ -13,6 +13,7 @@ import gv  # Get access to ospi's settings
 from urls import urls  # Get access to ospi's URLs
 from ospi import template_render
 from webpages import ProtectedPage
+from threading import Thread
 
 # gv.pd Reference
 ###########################
@@ -31,9 +32,18 @@ urls.extend(['/ss', 'plugins.sunrise_sunset.sunrise_sunset', '/uss', 'plugins.su
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 
-class sunrise_sunset(ProtectedPage):
-    """Load an html page for entering zip code and choosing station"""
-    def GET(self):
+sun_data = []
+
+class SunriseSunset(Thread):
+    global sun_data
+    def __init__(self):
+        Thread.__init__(self)
+        self.daemon = True
+        self.start()
+        self.status = ''
+
+        self._sleep_time = 0
+
         try:
             with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
                 sun_data = json.load(f)
@@ -42,7 +52,40 @@ class sunrise_sunset(ProtectedPage):
             with open('./data/sunrise.json', 'w') as f:  # write default data to file
                 json.dump(sun_data, f)
 
-        sun_data = calculate(sun_data)
+    def add_status(self, msg):
+        if self.status:
+            self.status += '\n' + msg
+        else:
+            self.status = msg
+        print msg
+
+    def update(self):
+        self._sleep_time = 0
+
+    def _sleep(self, secs):
+        self._sleep_time = secs
+        while self._sleep_time > 0:
+            time.sleep(1)
+            self._sleep_time -= 1
+
+    def run(self):
+        time.sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
+
+        while True:
+            self.add_status("Calculating sun_data")
+            sun_data = calculate()
+            self._sleep(5)
+        time.sleep(0.5)
+
+
+sunny = SunriseSunset()
+
+
+class sunrise_sunset(ProtectedPage):
+    """Load an html page for entering zip code and choosing station"""
+    global sun_data
+    def GET(self):
+        sun_data = calculate()
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
@@ -142,7 +185,9 @@ def create_program(data):
     return True
 
 
-def calculate(data):
+def calculate():
+    global sun_data
+    data = sun_data
     zcdb = ZipCodeDatabase()
     local_zip = data['zip']
     zipcode = 0
