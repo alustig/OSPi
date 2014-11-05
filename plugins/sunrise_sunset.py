@@ -83,7 +83,7 @@ sunny = SunriseSunset()
 class sunrise_sunset(ProtectedPage):
     """Load an html page for entering zip code and choosing station"""
     def GET(self):
-        sun_data = calculate()
+        sun_data = calculate(sun_data)
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
