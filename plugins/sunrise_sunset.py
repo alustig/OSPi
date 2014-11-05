@@ -103,11 +103,12 @@ def create_program(data):
 
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
-        srtime = datetime.datetime(100,1,1,int(sr[0]),int(sr[1]))
+        sr = map(int, sr)
+        srtime = datetime.datetime(100,1,1,sr[0],sr[1])
         srstd = datetime.timedelta(0,0,0,0,int(data['srs']))
         sretd = datetime.timedelta(0,0,0,0,int(data['sre']))
         srs = srtime-srstd
-        sre = srtime+srstd
+        sre = srtime+sretd
         srdur = (sre-srs).total_seconds()
         print "Sunrise:",srtime.time()
         print "On:",srs.time()
@@ -126,12 +127,14 @@ def create_program(data):
         sse = data['sse'].split(":")
         sse = map(int, sse)
         if ss[1] > sse[1]:
-            sse[1] += 60
-            ss[0] -= 1
-        ssh = sse[0]-ss[0]
-        ssm = sse[1]-ss[1]
+            sse[1] = 60-ss[1]
+            sse[0] -= 1
+            ssm = sse[1]
+        else:
+            ssm = sse[1]-ss[1]
+        sshr = sse[0]-ss[0]
         ssstd = datetime.timedelta(0,0,0,0,int(data['sss']))
-        ssetd = datetime.timedelta(0,0,0,0,ssh*60+ssm)
+        ssetd = datetime.timedelta(0,0,0,0,sshr*60+ssm)
         sss = sstime-ssstd
         sse = sstime+ssetd
         ssdur = (sse-sss).total_seconds()
