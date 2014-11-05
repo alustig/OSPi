@@ -102,7 +102,7 @@ class update(ProtectedPage):
             sun_data = calculate(qdict)
             json.dump(sun_data, f)
         
-        create_program(sun_data)
+        create_program()
         raise web.seeother('/ss')
 
 
