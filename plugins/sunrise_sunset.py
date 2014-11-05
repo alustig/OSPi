@@ -71,9 +71,9 @@ class SunriseSunset(Thread):
 
         while True:
             print  "Plugin is: ",sun_data['auto_ss']
-            if sun_data['auto_ss'] == 'on': # Plugin is enabled
-                with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
+            with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
                     sun_data = json.load(f)
+            if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun_data")
                 sun_data = calculate(sun_data)
                 create_program(sun_data)
