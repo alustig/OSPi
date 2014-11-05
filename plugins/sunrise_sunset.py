@@ -110,7 +110,7 @@ def options_data():
     # Defaults:
     result = {
         'auto_ss': 'off',
-        'zip': '',
+        'zip': 0,
         'srs': 0,
         'sre': 0,
         'sss': 0,
