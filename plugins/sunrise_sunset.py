@@ -35,6 +35,7 @@ gv.plugin_menu.append(['Sunrise Sunset', '/ss'])
 sun_data = []
 
 class SunriseSunset(Thread):
+    global sun_data
     def __init__(self):
         Thread.__init__(self)
         self.daemon = True
