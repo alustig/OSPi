@@ -78,7 +78,7 @@ class SunriseSunset(Thread):
                 self.add_status("Calculating sun data")
                 sun_data = calculate(sun_data)
                 create_program(sun_data)
-                self._sleep(12*60*60)
+                self._sleep(12*60*60) # 12 hours
             time.sleep(0.5)
 
 
