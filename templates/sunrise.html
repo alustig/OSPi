@@ -37,12 +37,18 @@ $code:
             sunset = sunset[0].split(':');
             var ssh = parseInt(sunset[0]) + 12;
             var ssm = parseInt(sunset[1]);
-            if (m[0] != sse)
+            if (m[0] != sse) {
                 alert("Please enter a sunset end time in the format (hh:mm).");
-            else if (parseInt(m[1])>23)
+                return false;
+            }
+            else if (parseInt(m[1])>23) {
                 alert("Not a valid sunset time.");
-            else if (parseInt(m[1])<ssh || (parseInt(m[1])==ssh && parseInt(m[2])<=ssm))
+                return false;
+            }
+            else if (parseInt(m[1])<ssh || (parseInt(m[1])==ssh && parseInt(m[2])<=ssm)) {
                 alert("Sunset end time cannot be before the sun sets.");
+                return false;
+            }
 
             jQuery("#pluginForm").submit();
         });
