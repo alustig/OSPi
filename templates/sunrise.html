@@ -15,18 +15,18 @@ $code:
             var sss = jQuery("#sss").html();
             var sse = jQuery("#sse").html();
 
-            if (!jQuery.isNumeric(srs) || Math.floor(srs) != srs) {
-                alert("Please enter an interger value for sunrise start time.");
+            if (!jQuery.isNumeric(srs) || Math.floor(srs) != srs || parseInt(srs) > 120) {
+                alert("Please enter an integer value less than 120 for sunrise start time.");
                 return false;
             }
 
-            if (!jQuery.isNumeric(sre) || Math.floor(sre) != sre) {
-                alert("Please enter an interger value for sunrise end time.");
+            if (!jQuery.isNumeric(sre) || Math.floor(sre) != sre || parseInt(sre) > 120) {
+                alert("Please enter an integer value less than 120 for sunrise end time.");
                 return false;
             }
 
-            if (!jQuery.isNumeric(sss) || Math.floor(sss) != sss) {
-                alert("Please enter an interger value for sunset start time.");
+            if (!jQuery.isNumeric(sss) || Math.floor(sss) != sss || parseInt(sss) > 120) {
+                alert("Please enter an integer value less than 120 for sunset start time.");
                 return false;
             }
 
