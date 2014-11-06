@@ -78,7 +78,7 @@ class SunriseSunset(Thread):
                 self.add_status("Calculating sun data")
                 sun_data = calculate(sun_data)
                 create_program(sun_data)
-                self._sleep(12*60*60) # 12 hours
+                self._sleep(12*60*60) # 12
             time.sleep(0.5)
 
 
@@ -180,7 +180,7 @@ def create_program(data):
         sss = str(sss.time()).split(":")
         start = int(sss[0])*60+int(sss[1])
         sse = str(sse.time()).split(":")
-        end = sse[0]*60+sse[1]
+        end = int(sse[0])*60+int(sse[1])
 
         newset = [2,127,0,start,end,int(ssdur),int(ssdur),station] # 1st bit = 2 for sunset
         gv.pd.append(newset)
