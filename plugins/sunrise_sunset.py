@@ -54,8 +54,8 @@ class SunriseSunset(Thread):
         self._sleep_time = secs
         while self._sleep_time > 0:
             #print self._sleep_time
-            if self._sleep_time % 36000 == 0:
-                print self._sleep_time/3600,"mins left"
+            if self._sleep_time % 600 == 0:
+                print self._sleep_time/60,"mins left"
             time.sleep(1)
             self._sleep_time -= 1
 
