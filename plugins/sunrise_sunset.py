@@ -71,7 +71,6 @@ class SunriseSunset(Thread):
                 json.dump(sun_data, f)
 
         while True:
-            print  "Plugin is:",sun_data['auto_ss']
             with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
                     sun_data = json.load(f)
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
