@@ -10,31 +10,39 @@ $code:
     jQuery(document).ready(function(){
 
         jQuery("#cSubmit").click(function() {
-            var srs = jQuery("#srs").html();
-            var sre = jQuery("#sre").html();
-            var sss = jQuery("#sss").html();
-            var sse = jQuery("#sse").html();
+            var srs = jQuery("#srs").val();
+            var sre = jQuery("#sre").val();
+            var sss = jQuery("#sss").val();
+            var sse = jQuery("#sse").val();
+            var sunset = jQuery("#sunset").val();
 
-            if (!jQuery.isNumeric(srs) || Math.floor(srs) != srs || parseInt(srs) > 120) {
+            if (!jQuery.isNumeric(parseInt(srs)) || Math.floor(srs) != srs || parseInt(srs) > 121) {
                 alert("Please enter an integer value less than 120 for sunrise start time.");
                 return false;
             }
 
-            if (!jQuery.isNumeric(sre) || Math.floor(sre) != sre || parseInt(sre) > 120) {
+            if (!jQuery.isNumeric(parseInt(sre)) || Math.floor(sre) != sre || parseInt(sre) > 121) {
                 alert("Please enter an integer value less than 120 for sunrise end time.");
                 return false;
             }
 
-            if (!jQuery.isNumeric(sss) || Math.floor(sss) != sss || parseInt(sss) > 120) {
+            if (!jQuery.isNumeric(parseInt(sss)) || Math.floor(sss) != sss || parseInt(sss) > 121) {
                 alert("Please enter an integer value less than 120 for sunset start time.");
                 return false;
             }
 
-            var reg = /([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?/;
-            if (reg.test(sse)) {
-                alert("Please enter a value in the proper format (hh:mm) for sunset start time.");
-                return false;
-            }
+            var re = /([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?/;     
+            var m = re.exec(sse);
+            sunset = sunset.split(' ');
+            sunset = sunset[0].split(':');
+            var ssh = parseInt(sunset[0]) + 12;
+            var ssm = parseInt(sunset[1]);
+            if (m[0] != sss)
+                alert("Please enter a sunset end time in the format (hh:mm).");
+            else if (parseInt(m[1])>23)
+                alert("Not a valid sunset time.");
+            else if (parseInt(m[1])<ssh || (parseInt(m[1])==ssh && parseInt(m[2])<=ssm))
+                alert("Sunset end time cannot be before the sun sets.");
 
             jQuery("#pluginForm").submit();
         });
@@ -92,6 +100,7 @@ $code:
             <span style="font-weight: bold;">$m_vals['loc']</span>:<br/>
             Next sunrise will be at: <span style="font-weight: bold;">$m_vals['sunrise']</span><br/>
             Next sunset will be at: <span style="font-weight: bold;">$m_vals['sunset']</span><br/>
+            <input type="hidden" id="sunset" value=$m_vals['sunset']>
         </div>
 
         <br/>
