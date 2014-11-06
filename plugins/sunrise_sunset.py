@@ -180,7 +180,7 @@ def create_program(data):
         sss = str(sss.time()).split(":")
         start = int(sss[0])*60+int(sss[1])
         sse = str(sse.time()).split(":")
-        end = int(sse[0])*60+int(sse[1])
+        end = sse[0]*60+sse[1]
 
         newset = [2,127,0,start,end,int(ssdur),int(ssdur),station] # 1st bit = 2 for sunset
         gv.pd.append(newset)
