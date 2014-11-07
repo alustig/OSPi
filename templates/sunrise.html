@@ -14,12 +14,29 @@ $code:
             var sre = jQuery("#sre").val();
             var sss = jQuery("#sss").val();
             var sse = jQuery("#sse").val();
+            var sunrise = jQuery("#sunrise").val();
             var sunset = jQuery("#sunset").val();
 
-            if (!jQuery.isNumeric(parseInt(srs)) || Math.floor(srs) != srs || parseInt(srs) > 121) {
-                alert("Please enter an integer value less than 120 for sunrise start time.");
+            var re = /([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?/;     
+            var m = re.exec(srs);
+            sunrise = sunrise.split(' ');
+            sunrise = sunrise[0].split(':');
+            var srh = parseInt(sunrise[0]);
+            var srm = parseInt(sunrise[1]);
+            if (m[0] != srs) {
+                alert("Please enter a sunrise end time in the format (hh:mm).");
                 return false;
             }
+            else if (parseInt(m[1])>23) {
+                alert("Not a valid sunrise time.");
+                return false;
+            }
+            else if (parseInt(m[1])>srh || (parseInt(m[1])==srh && parseInt(m[2])>=srm)) {
+                alert("Sunrise begin time cannot be after the sun sets.");
+                return false;
+            }
+
+
 
             if (!jQuery.isNumeric(parseInt(sre)) || Math.floor(sre) != sre || parseInt(sre) > 121) {
                 alert("Please enter an integer value less than 120 for sunrise end time.");
@@ -30,9 +47,10 @@ $code:
                 alert("Please enter an integer value less than 120 for sunset start time.");
                 return false;
             }
+  
 
-            var re = /([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?/;     
-            var m = re.exec(sse);
+
+            m = re.exec(sse);
             sunset = sunset.split(' ');
             sunset = sunset[0].split(':');
             var ssh = parseInt(sunset[0]) + 12;
@@ -83,7 +101,7 @@ $code:
                     </td>
                 </tr>
                 <tr>
-                    <td style='text-transform: none; text-align: right;'>Start time before sunrise (mins):</td>
+                    <td style='text-transform: none; text-align: right;'>Start time (hh:mm):</td>
                     <td><input type="text" name="srs" id="srs" value=$m_vals["srs"]></td>
                 </tr>
                 <tr>

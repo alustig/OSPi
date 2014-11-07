@@ -40,7 +40,6 @@ function doSimulation() { // Create schedule by a full program simulation, was d
 //  var simminutes=simstart; // start at time set by calling function or 0 as default
   var simminutes=0;
   var busy=0,match_found=0,endmin=0,bid,s,sid,pid;
-  var wlt = 0; // Temp water level
   var st_array=new Array(nst); //start time per station in seconds (minutes since midnight)?
   var pid_array=new Array(nst); // program index per station
   var et_array=new Array(nst); // end time per station (duration in seconds adjusted by water level - and station delay??)
@@ -60,8 +59,10 @@ function doSimulation() { // Create schedule by a full program simulation, was d
           if(mas==(sid+1)) continue; // skip master station
           if(pd[7+bid]&(1<<s)) { // if this station is selected in this program...
 				wlt = wlx; // Assign the calculated water level to a temp variable
-				if (s == Math.log(ir)/Math.log(2)) wlt = 100; // If a station "ignores rain", then ignore the watering levels too (only works with one station)
-				et_array[sid]=pd[6]*wl/100*wlt/100; // Set end time for this station to duration adjusted by water level
+				if (s == Math.log(ir)/Math.log(2)) // If a station "ignores rain", then ignore the watering levels too (only works with one station)
+					et_array[sid]=pd[6];
+				else
+					et_array[sid]=pd[6]*wl/100*wlt/100; // Set end time for this station to duration adjusted by water level
 				pid_array[sid]=pid+1; // Set station element in pid array to program number (pid+1)
             match_found=1;
           }

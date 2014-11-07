@@ -313,6 +313,7 @@ def history_info():
 
     result = {}
     for index, day_info in info.iteritems():
+        print day_info
         result[index] = {
             'temp_c': float(day_info['maxtempm']),
             'rain_mm': float(day_info['precipm']),

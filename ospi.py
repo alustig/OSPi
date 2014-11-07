@@ -30,7 +30,7 @@ def timing_loop():
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     # check if program time matches current time, is active, and has a duration
                     if prog_match(p) and p[0] and p[6]:
-                        duration = p[6] * gv.sd['wl'] / 100 * extra_adjustment  # program duration scaled by "water level"
+                        
                         # check each station for boards listed in program up to number of boards in Options
                         for b in range(len(p[7:7 + gv.sd['nbrd']])):
                             for s in range(8):
@@ -42,23 +42,25 @@ def timing_loop():
 
                                 if p[7 + b] & 1 << s:  # if this station is scheduled in this program
                                     #print 'station ',s, ' ignore rain?',gv.sd['ir'][b] == 1 << s
-                                    dur_mod = duration
-                                    if gv.sd['ir'][b] == 1 << s: # If this station is ignoring rain and water level adjusting
-                                        dur_mod = duration/extra_adjustment # restore the original duration
+                                    if gv.sd['ir'][b] == 1 << s:  # If this station is ignoring rain and water level adjusting
+                                        duration = p[6]
+                                    else:
+                                        duration = p[6] * gv.sd['wl'] / 100 * extra_adjustment  # program duration scaled by "water level"
+                                
                                     if gv.sd['seq']:  # sequential mode
-                                        gv.rs[sid][2] = dur_mod
+                                        gv.rs[sid][2] = duration
                                         gv.rs[sid][3] = i + 1  # store program number for scheduling
                                         gv.ps[sid][0] = i + 1  # store program number for display
-                                        gv.ps[sid][1] = dur_mod
+                                        gv.ps[sid][1] = duration
                                     else:  # concurrent mode
                                         # If duration is shorter than any already set for this station
-                                        if dur_mod < gv.rs[sid][2]:
+                                        if duration < gv.rs[sid][2]:
                                             continue
                                         else:
-                                            gv.rs[sid][2] = dur_mod
+                                            gv.rs[sid][2] = duration
                                             gv.rs[sid][3] = i + 1  # store program number
                                             gv.ps[sid][0] = i + 1  # store program number for display
-                                            gv.ps[sid][1] = dur_mod
+                                            gv.ps[sid][1] = duration
                             print gv.rs
                             print gv.ps
                         schedule_stations(p[7:7 + gv.sd['nbrd']])  # turns on gv.sd['bsy']
