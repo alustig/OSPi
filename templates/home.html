@@ -65,15 +65,15 @@ $code:
             var classes = "stationStatus station_" + station.status;
             switch (station.reason) {
                 case "program" :
-                    var totalSec = station.remaining;
-                    var hours = parseInt( totalSec / 3600 ) % 24;
-                    var minutes = parseInt( totalSec / 60 ) % 60;
-                    var seconds = totalSec % 60;
-                    var display;
-                    } else if (station.status == "on") {
-                        display = (hours < 10 ? "0" + hours : hours) + "-" + (minutes < 10 ? "0" + minutes : minutes) + "-" + (seconds  < 10 ? "0" + seconds : seconds);
+                    var hours = parseInt( station.remaining / 3600 ) % 24;
+                    var minutes = parseInt( station.remaining / 60 ) % 60;
+                    var seconds = station.remaining % 60;
+                    var hoursStr = "";
+                    if (hours > 0) {hoursStr = hours + ":";}
+                    if (status == "on") {
+                        display = hoursStr + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
                     } else {
-                        display = "(" + minutes+":"+seconds + ")";
+                        display = "(" + hours + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds) + ")";
                     }
                     updateInterval = 1000;
                     break;
@@ -266,7 +266,6 @@ $else:
                     <span id="displayScheduleDate"></span>
                 </td>
                 <td colspan="16" style="text-align:right">
-                    Hey guys
                     <button id="pPrev" class="execute">&lt;&lt; Prev Day</button>
                     <button id="pToday" class="execute">Today</button>
                     <button id="pNext" class="execute">Next Day &gt;&gt;</button>
