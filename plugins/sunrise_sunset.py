@@ -139,6 +139,9 @@ def create_program(data):
         sr = map(int, sr)
         srs = data['srs'].split(":")
         srs = map(int, srs)
+        if (srs[0]>sr[0]) or (srs[0]==sr[0] and srs[1]>sr[1]):
+            srs[0]=sr[0]
+            srs[1]=sr[1]
         srtime = datetime.datetime(100,1,1,int(sr[0]),int(sr[1]))
         srs = datetime.datetime(100,1,1,int(srs[0]),int(srs[1]))
         sretd = datetime.timedelta(0,0,0,0,int(data['sre']))
