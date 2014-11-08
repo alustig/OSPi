@@ -73,7 +73,7 @@ $code:
                     if (minutes < 10) {minutes = "0"+minutes;}
                     if (seconds < 10) {seconds = "0"+seconds;}
                     if (hours > 0) {
-                        display = hours+":"+minutes+":"+seconds;
+                        display = hours+":"+Math.floor(minutes/60)+":"+seconds;
                     } else if (station.status == "on") {
                         display = minutes+":"+seconds;
                     } else {
