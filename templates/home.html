@@ -65,17 +65,13 @@ $code:
             var classes = "stationStatus station_" + station.status;
             switch (station.reason) {
                 case "program" :
-                    var minutes = Math.floor(station.remaining/60);
-                    var hours = 0;
-                    if (minutes >= 60)
-                        hours = Math.floor(minutes/60);
-                    var seconds = Math.floor(station.remaining - 60*minutes);
-                    if (minutes < 10) {minutes = "0"+minutes;}
-                    if (seconds < 10) {seconds = "0"+seconds;}
-                    if (hours > 0) {
-                        display = hours+":"+Math.floor(minutes/60)+":"+seconds;
+                    var totalSec = station.remaining;
+                    var hours = parseInt( totalSec / 3600 ) % 24;
+                    var minutes = parseInt( totalSec / 60 ) % 60;
+                    var seconds = totalSec % 60;
+                    var display;
                     } else if (station.status == "on") {
-                        display = minutes+":"+seconds;
+                        display = (hours < 10 ? "0" + hours : hours) + "-" + (minutes < 10 ? "0" + minutes : minutes) + "-" + (seconds  < 10 ? "0" + seconds : seconds);
                     } else {
                         display = "(" + minutes+":"+seconds + ")";
                     }
