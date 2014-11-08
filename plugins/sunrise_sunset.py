@@ -75,7 +75,7 @@ class SunriseSunset(Thread):
                     sun_data = json.load(f)
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun data")
-                sun_data = calculate(sun_data)
+                sun_data = calculateSun(sun_data)
                 create_program(sun_data)
                 self._sleep(12*60*60) # 12
             time.sleep(0.5)
@@ -89,7 +89,7 @@ class sunrise_sunset(ProtectedPage):
     def GET(self):
         with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
             sun_data = json.load(f)
-        sun_data = calculate(sun_data)
+        sun_data = calculateSun(sun_data)
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
@@ -99,7 +99,7 @@ class update(ProtectedPage):
         if 'auto_ss' not in qdict:
             qdict['auto_ss'] = 'off'
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
-            sun_data = calculate(qdict)
+            sun_data = calculateSun(qdict)
             json.dump(sun_data, f)
         sunny.update()
         raise web.seeother('/ss')
@@ -138,12 +138,12 @@ def create_program(data):
     if data['auto_ss'] == 'on': # Plugin is enabled
         sr = data['sr'].split(":")
         sr = map(int, sr)
-        srtime = datetime.datetime(100,1,1,sr[0],sr[1])
-        srstd = datetime.timedelta(0,0,0,0,int(data['srs']))
+        srs = data['srs'].split(":")
+        srs = map(int, srs)
+        srtime = datetime.datetime(100,1,1,int(sr[0]),int(sr[1]))
+        srs = datetime.datetime(100,1,1,int(srs[0]),int(srs[1]))
         sretd = datetime.timedelta(0,0,0,0,int(data['sre']))
-        srs = srtime-srstd
         sre = srtime+sretd
-        srdur = (sre-srs).total_seconds()
         print "Sunrise:",srtime.time()
         print "On:",srs.time()
         print "Off:",sre.time()
@@ -187,7 +187,7 @@ def create_program(data):
     return True
 
 
-def calculate(data):
+def calculateSun(data):
     zcdb = ZipCodeDatabase()
     local_zip = data['zip']
     zipcode = 0
