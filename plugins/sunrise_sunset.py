@@ -143,6 +143,7 @@ def create_program(data):
         srs = datetime.datetime(100,1,1,int(srs[0]),int(srs[1]))
         sretd = datetime.timedelta(0,0,0,0,int(data['sre']))
         sre = srtime+sretd
+        srdur = (sre-srs).total_seconds()
         print "Sunrise:",srtime.time()
         print "On:",srs.time()
         print "Off:",sre.time()
