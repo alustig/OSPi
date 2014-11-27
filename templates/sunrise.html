@@ -132,9 +132,10 @@ $code:
             <span style="font-weight: bold;">$m_vals['loc']</span>:<br/>
             Next sunrise will be at: <span style="font-weight: bold;">$m_vals['sunrise']</span><br/>
             Next sunset will be at: <span style="font-weight: bold;">$m_vals['sunset']</span><br/><br/>
+            $ station = int(m_vals['station'])
             $if 'ontime' in m_vals:
-                <b>${snames[sid]}</b> will turn on at <b>$m_vals['ontime'][0]</b> and off at <b>$m_vals['offtime'][0]</b> for sunrise<br/>
-                <b>${snames[sid]}</b> will turn on at <b>$m_vals['ontime'][1]</b> and off at <b>$m_vals['offtime'][1]</b> for sunset
+                <b>${snames[station]}</b> will turn on at <b>$m_vals['ontime'][0]</b> and off at <b>$m_vals['offtime'][0]</b> for sunrise<br/>
+                <b>${snames[station]}</b> will turn on at <b>$m_vals['ontime'][1]</b> and off at <b>$m_vals['offtime'][1]</b> for sunset
             <input type="hidden" id="sunrise" value=$m_vals['sunrise']>
             <input type="hidden" id="sunset" value=$m_vals['sunset']>
         </div>

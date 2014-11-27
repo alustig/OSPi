@@ -26,11 +26,9 @@ def timing_loop():
             if (lt[3] * 60) + lt[4] != last_min:  # only check programs once a minute
                 last_min = (lt[3] * 60) + lt[4]
                 extra_adjustment = plugin_adjustment()
-                print extra_adjustment
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     # check if program time matches current time, is active, and has a duration
                     if prog_match(p) and p[0] and p[6]:
-                        
                         # check each station for boards listed in program up to number of boards in Options
                         for b in range(len(p[7:7 + gv.sd['nbrd']])):
                             for s in range(8):
@@ -61,8 +59,6 @@ def timing_loop():
                                             gv.rs[sid][3] = i + 1  # store program number
                                             gv.ps[sid][0] = i + 1  # store program number for display
                                             gv.ps[sid][1] = duration
-                            print gv.rs
-                            print gv.ps
                         schedule_stations(p[7:7 + gv.sd['nbrd']])  # turns on gv.sd['bsy']
 
         if gv.sd['bsy']:
@@ -73,7 +69,7 @@ def timing_loop():
                         if gv.now >= gv.rs[sid][1]:  # check if time is up
                             gv.srvals[sid] = 0
                             set_output()
-                            gv.sbits[b] &= ~1 << s
+                            gv.sbits[b] &= ~(1 << s)
                             if gv.sd['mas'] - 1 != sid:  # if not master, fill out log
                                 gv.ps[sid] = [0, 0]
                                 gv.lrun[0] = sid
@@ -90,7 +86,7 @@ def timing_loop():
                                 set_output()
                                 gv.sbits[b] |= 1 << s  # Set display to on
                                 gv.ps[sid][0] = gv.rs[sid][3]
-                                gv.ps[sid][1] = gv.rs[sid][2] + 1  # testing display
+                                gv.ps[sid][1] = gv.rs[sid][2]
                                 if gv.sd['mas'] and gv.sd['mo'][b] & 1 << (s - (s / 8) * 80):  # Master settings
                                     masid = gv.sd['mas'] - 1  # master index
                                     gv.rs[masid][0] = gv.rs[sid][0] + gv.sd['mton']
@@ -152,7 +148,7 @@ def timing_loop():
         #### End of timing loop ####
 
 
-class OSPyApp(web.application):
+class OSPiApp(web.application):
     """Allow program to select HTTP port."""
 
     def run(self, port=gv.sd['htp'], *middleware):  # get port number from options settings
@@ -160,7 +156,7 @@ class OSPyApp(web.application):
         return web.httpserver.runsimple(func, ('0.0.0.0', port))
 
 
-app = OSPyApp(urls, globals())
+app = OSPiApp(urls, globals())
 web.config.debug = False  # Improves page load speed
 if web.config.get('_session') is None:
     web.config._session = web.session.Session(app, web.session.DiskStore('sessions'),
@@ -170,7 +166,8 @@ template_globals = {
     'str': str,
     'eval': eval,
     'session': web.config._session,
-    'json': json
+    'json': json,
+    '_': _
 }
 
 template_render = web.template.render('templates', globals=template_globals, base='base')
