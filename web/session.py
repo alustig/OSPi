@@ -212,7 +212,6 @@ class Store:
 class DiskStore(Store):
     """
     Store for saving a session on disk.
-
         >>> import tempfile
         >>> root = tempfile.mkdtemp()
         >>> s = DiskStore(root)
@@ -279,7 +278,6 @@ class DiskStore(Store):
 class DBStore(Store):
     """Store for saving a session in database
     Needs a table with the following columns:
-
         session_id CHAR(128) UNIQUE NOT NULL,
         atime DATETIME NOT NULL default current_timestamp,
         data TEXT
@@ -320,10 +318,8 @@ class DBStore(Store):
 
 class ShelfStore:
     """Store for saving session using `shelve` module.
-
         import shelve
         store = ShelfStore(shelve.open('session.shelf'))
-
     XXX: is shelve thread-safe?
     """
     def __init__(self, shelf):

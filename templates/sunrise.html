@@ -38,7 +38,7 @@ $code:
             }
             else if (parseInt(m[1])>srh || (parseInt(m[1])==srh && parseInt(m[2])>=srm)) {
                 alert("Sunrise begin time cannot be after the sun sets.");
-                //return false;
+                return false;
             }
 
 
@@ -90,7 +90,7 @@ $code:
     <p>Fill out the info below to create and daily adjust a program based on your location</p>
     <form id="pluginForm" action="/uss" method="get">
         <div style="float: left; width: 450px; margin-right: 10px;">
-            Enable this plugin: <input name='auto_ss' type='checkbox'${" checked" if m_vals['auto_ss'] == "on" else ""}> 
+            <label for="enable">Enable this plugin: </label><input name='auto_ss' id="enable" type='checkbox'${" checked" if m_vals['auto_ss'] == "on" else ""}> 
             <table class="optionList">
                 <tr>
                     <td style='text-transform: none; text-align: right;'>Zip Code:</td>
@@ -131,14 +131,18 @@ $code:
             <br/>
             <span style="font-weight: bold;">$m_vals['loc']</span>:<br/>
             Next sunrise will be at: <span style="font-weight: bold;">$m_vals['sunrise']</span><br/>
-            Next sunset will be at: <span style="font-weight: bold;">$m_vals['sunset']</span><br/>
+            Next sunset will be at: <span style="font-weight: bold;">$m_vals['sunset']</span><br/><br/>
+            $if 'ontime' in m_vals:
+                <b>${snames[sid]}</b> will turn on at <b>$m_vals['ontime'][0]</b> and off at <b>$m_vals['offtime'][0]</b> for sunrise<br/>
+                <b>${snames[sid]}</b> will turn on at <b>$m_vals['ontime'][1]</b> and off at <b>$m_vals['offtime'][1]</b> for sunset
             <input type="hidden" id="sunrise" value=$m_vals['sunrise']>
             <input type="hidden" id="sunset" value=$m_vals['sunset']>
         </div>
 
-        <br/>
+        <div style="display: none;">
         $for p in gv.pd:
             ${p} <br/>
+        </div>
         <div style="clear: both;"></div>
         
     </form>

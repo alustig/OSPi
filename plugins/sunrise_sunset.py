@@ -39,13 +39,6 @@ class SunriseSunset(Thread):
         self.start()
         self.status = ''
         self._sleep_time = 0
-        try:
-            with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
-                sun_data = json.load(f)
-        except IOError:  # If file does not exist create the defaults
-            sun_data = options_data()
-            with open('./data/sunrise.json', 'w') as f:  # write default data to file
-                json.dump(sun_data, f)
 
     def add_status(self, msg):
         if self.status:
@@ -75,12 +68,9 @@ class SunriseSunset(Thread):
             if sun_data['auto_ss'] == 'on': # Plugin is enabled
                 self.add_status("Calculating sun data")
                 sun_data = calculateSun(sun_data)
-                create_program(sun_data)
+                sun_data = create_program(sun_data)
                 self._sleep(12*60*60) # 12
             time.sleep(0.5)
-
-
-sunny = SunriseSunset()
 
 
 class sunrise_sunset(ProtectedPage):
@@ -88,7 +78,11 @@ class sunrise_sunset(ProtectedPage):
     def GET(self):
         with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
             sun_data = json.load(f)
+
         sun_data = calculateSun(sun_data)
+        sun_data = create_program(sun_data)
+        with open('./data/sunrise.json', 'w') as f:  # write the settings to file
+            json.dump(sun_data, f)
         return template_render.sunrise(sun_data)
 
 class update(ProtectedPage):
@@ -97,8 +91,10 @@ class update(ProtectedPage):
         qdict = web.input()
         if 'auto_ss' not in qdict:
             qdict['auto_ss'] = 'off'
+        sun_data = calculateSun(qdict)
+        sun_data = create_program(sun_data)
+
         with open('./data/sunrise.json', 'w') as f:  # write the settings to file
-            sun_data = calculateSun(qdict)
             json.dump(sun_data, f)
         sunny.update()
         raise web.seeother('/ss')
@@ -135,6 +131,8 @@ def create_program(data):
     gv.pd[:] = list(ifilterfalse(determine, gv.pd))
 
     if data['auto_ss'] == 'on': # Plugin is enabled
+        data["ontime"] = []
+        data["offtime"] = []
         sr = data['sr'].split(":")
         sr = map(int, sr)
         srs = data['srs'].split(":")
@@ -142,18 +140,25 @@ def create_program(data):
         if (srs[0]>sr[0]) or (srs[0]==sr[0] and srs[1]>sr[1]):
             srs[0]=sr[0]
             srs[1]=sr[1]
-        srtime = datetime.datetime(100,1,1,int(sr[0]),int(sr[1]))
-        srs = datetime.datetime(100,1,1,int(srs[0]),int(srs[1]))
+        y = int(datetime.datetime.now().strftime("%Y"))
+        m = int(datetime.datetime.now().strftime("%m"))
+        d = int(datetime.datetime.now().strftime("%d"))
+        srtime = datetime.datetime(y,m,d,int(sr[0]),int(sr[1]))
+        srs = datetime.datetime(y,m,d,int(srs[0]),int(srs[1]))
         sretd = datetime.timedelta(0,0,0,0,int(data['sre']))
         sre = srtime+sretd
         srdur = (sre-srs).total_seconds()
         print "Sunrise:",srtime.time()
         print "On:",srs.time()
         print "Off:",sre.time()
+
+        data['ontime'].append(srs.strftime("%I:%M %p"))
+        data['offtime'].append(sre.strftime("%I:%M %p"))
         srs = str(srs.time()).split(":")
         start = int(srs[0])*60+int(srs[1])
         sre = str(sre.time()).split(":")
         end = int(sre[0])*60+int(sre[1])
+
 
         station = int(math.pow(2,int(data['station'])))
         newrise = [2,127,0,start,end,int(srdur)/60,int(srdur),station] # 1st bit = 2 for sunrise
@@ -161,7 +166,7 @@ def create_program(data):
 
         ss = data['ss'].split(":")
         ss = map(int, ss)
-        sstime = datetime.datetime(100,1,1,int(ss[0]),int(ss[1]))
+        sstime = datetime.datetime(y,m,d,int(ss[0]),int(ss[1]))
         sse = data['sse'].split(":")
         sse = map(int, sse)
         if ss[1] > sse[1]:
@@ -179,15 +184,24 @@ def create_program(data):
         print "Sunset:",sstime.time()
         print "On:",sss.time()
         print "Off:",sse.time()
+
+        data['ontime'].append(sss.strftime("%I:%M %p"))
+        data['offtime'].append(sse.strftime("%I:%M %p"))
         sss = str(sss.time()).split(":")
         start = int(sss[0])*60+int(sss[1])
         sse = str(sse.time()).split(":")
         end = int(sse[0])*60+int(sse[1])
 
+        sss = map(int, sss)
+        sse = map(int, sse)
+        #data['ontime'].append()
+        #data['offtime'].append()
+
         newset = [2,127,0,start,end,int(ssdur)/60,int(ssdur),station] # 1st bit = 2 for sunset
         gv.pd.append(newset)
+        print data
 
-    return True
+    return data
 
 
 def calculateSun(data):
@@ -247,3 +261,13 @@ def determine(a):
             return True
         c+=1
     return False
+
+try:
+    with open('./data/sunrise.json', 'r') as f:  # Read the location and station from file
+        sun_data = json.load(f)
+except IOError:  # If file does not exist create the defaults
+    sun_data = options_data()
+    with open('./data/sunrise.json', 'w') as f:  # write default data to file
+        json.dump(sun_data, f)
+        
+sunny = SunriseSunset()
