@@ -170,9 +170,8 @@ def create_program(data):
         sse = data['sse'].split(":")
         sse = map(int, sse)
         if ss[1] > sse[1]:
-            sse[1] = 60-ss[1]
+            ssm = 60+ss[1]
             sse[0] -= 1
-            ssm = sse[1]
         else:
             ssm = sse[1]-ss[1]
         sshr = sse[0]-ss[0]
