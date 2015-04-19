@@ -356,7 +356,7 @@ msgid "Run Once"
 msgstr "Jednorázový"
 
 #: OSPi\templates\base.html:138
-msgid "Acces Plugins"
+msgid "Access Plugins"
 msgstr "Dostupné moduly"
 
 #: OSPi\templates\base.html:138

@@ -362,7 +362,7 @@ msgid "Run Once"
 msgstr "Run Once"
 
 #: OSPi\templates\base.html:138
-msgid "Acces Plugins"
+msgid "Access Plugins"
 msgstr "Accéder aux modules"
 
 #: OSPi\templates\base.html:138
