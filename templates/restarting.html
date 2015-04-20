@@ -1,15 +1,15 @@
-$def with()
+$def with(go_to)
 
-$var title: $_('OSPi Restarting')
-$var page: restart
+$var title: OpenSprinkler Pi Restarting
+$var page: home
 
 <script>
     function checkPage() {
         jQuery.ajax({
             type: 'HEAD',
-            url: '/',
+            url: '${go_to}',
             success: function() {
-                window.location.href = '/';
+                window.location.replace('${go_to}');
             },
             failure: function() {
                 setTimeout(function() {
@@ -22,11 +22,11 @@ $var page: restart
     jQuery(document).ready(function(){
         setTimeout(function() {
             checkPage()
-        }, 3000);
+        }, 5000);
     });
 </script>
 
 <div id="restarting">
-    <div class="title">$_('ospi is restarting')</div>
-    $_('This may take several seconds...')
+    <div class="title">ospi is restarting</div>
+    You will be redirected as soon as possible...
 </div>

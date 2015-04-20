@@ -1,14 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import i18n
 import json
-import ast
+
 import time
 import thread
 from calendar import timegm
-import sys
-sys.path.append('./plugins')
 
 import web  # the Web.py module. See webpy.org (Enables the Python OpenSprinkler web interface)
 import gv
@@ -20,15 +16,15 @@ from gpio_pins import set_output
 
 def timing_loop():
     """ ***** Main timing algorithm. Runs in a separate thread.***** """
-    try:
-        print _('Starting timing loop') + '\n'
-    except Exception:
-        pass
+    print 'Starting timing loop \n'
     last_min = 0
     while True:  # infinite loop
+        gv.now = timegm(time.localtime())   # Current time based on local time from the Pi. updated once per second.
+        gv.gmtnow = time.time()             # Current gmt time (needed for client-side JS code).
         if gv.sd['en'] and not gv.sd['mm'] and (not gv.sd['bsy'] or not gv.sd['seq']):
-            if gv.now / 60 != last_min:  # only check programs once a minute
-                last_min = gv.now / 60
+            lt = time.gmtime(gv.now)
+            if (lt[3] * 60) + lt[4] != last_min:  # only check programs once a minute
+                last_min = (lt[3] * 60) + lt[4]
                 extra_adjustment = plugin_adjustment()
                 for i, p in enumerate(gv.pd):  # get both index and prog item
                     # check if program time matches current time, is active, and has a duration
@@ -55,6 +51,7 @@ def timing_loop():
                                         gv.ps[sid][0] = i + 1  # store program number for display
                                         gv.ps[sid][1] = duration
                                     else:  # concurrent mode
+                                        # If duration is shorter than any already set for this station
                                         if duration < gv.rs[sid][2]:
                                             continue
                                         else:
@@ -141,7 +138,7 @@ def timing_loop():
                     gv.rs[gv.sd['mas'] - 1][1] = gv.now  # turn off master
 
         if gv.sd['urs']:
-            check_rain()  # in helpers.py
+            check_rain()
 
         if gv.sd['rd'] and gv.now >= gv.sd['rdst']:  # Check of rain delay time is up
             gv.sd['rd'] = 0
@@ -160,7 +157,6 @@ class OSPiApp(web.application):
 
 
 app = OSPiApp(urls, globals())
-#  disableShiftRegisterOutput()
 web.config.debug = False  # Improves page load speed
 if web.config.get('_session') is None:
     web.config._session = web.session.Session(app, web.session.DiskStore('sessions'),
@@ -171,9 +167,7 @@ template_globals = {
     'eval': eval,
     'session': web.config._session,
     'json': json,
-    'ast': ast,
-    '_': _,
-    'i18n': i18n
+    '_': _
 }
 
 template_render = web.template.render('templates', globals=template_globals, base='base')
@@ -182,23 +176,15 @@ if __name__ == '__main__':
 
     #########################################################
     #### Code to import all webpages and plugin webpages ####
-
     import plugins
 
-    try:
-        print _('plugins loaded:')
-    except Exception:
-        pass
+    print 'plugins loaded:'
     for name in plugins.__all__:
         print ' ', name
 
     gv.plugin_menu.sort(key=lambda entry: entry[0])
-    #  Keep plugin manager at top of menu
-    try:
-        gv.plugin_menu.pop(gv.plugin_menu.index(['Manage Plugins', '/plugins']))
-    except Exception:
-        pass
 
+#    set_output()
     thread.start_new_thread(timing_loop, ())
 
     app.notfound = lambda: web.seeother('/')

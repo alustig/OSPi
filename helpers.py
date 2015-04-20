@@ -1,23 +1,19 @@
 # -*- coding: utf-8 -*-
-
-
-import i18n
-
 import datetime
 from threading import Thread
+
+__author__ = 'Rimco'
+
 import os
 import random
 import sys
 import time
 import subprocess
-import io
-import ast
-from web.webapi import seeother
+
 
 try:
-    from gpio_pins import GPIO, pin_rain_sense
+    from gpio_pins import pin_rain_sense, GPIO
 except ImportError:
-    print 'error importing GPIO pins into helpers'
     pass
 
 import web
@@ -32,7 +28,7 @@ except ImportError:
     try:
         import simplejson as json
     except ImportError:
-        print _("Error: json module not found")
+        print "Error: json module not found"
         sys.exit()
 
 
@@ -44,12 +40,8 @@ def reboot(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        GPIO.cleanup()
         time.sleep(wait)
-        try:
-            print _('Rebooting...')
-        except Exception:
-            pass
+        print 'Rebooting...'
         subprocess.Popen(['reboot'])
     else:
         t = Thread(target=reboot, args=(wait, True))
@@ -61,12 +53,8 @@ def poweroff(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        GPIO.cleanup()
         time.sleep(wait)
-        try:
-            print _('Powering off...')
-        except Exception:
-            pass
+        print 'Powering off...'
         subprocess.Popen(['poweroff'])
     else:
         t = Thread(target=poweroff, args=(wait, True))
@@ -78,15 +66,8 @@ def restart(wait=1, block=False):
         from gpio_pins import set_output
         gv.srvals = [0] * (gv.sd['nst'])
         set_output()
-        try:
-            GPIO.cleanup()
-        except Exception:
-            pass
         time.sleep(wait)
-        try:
-            print _('Restarting...')
-        except Exception:
-            pass
+        print 'Restarting...'
         subprocess.Popen('service ospi restart'.split())
     else:
         t = Thread(target=restart, args=(wait, True))
@@ -126,21 +107,26 @@ def get_rpi_revision():
         return 0
 
 
+def baseurl():
+    """Return URL app is running under."""
+    result = web.ctx['home']
+    return result
+
+
 def check_rain():
     try:
-        if gv.sd['rst'] == 1:  # Rain sensor type normally open (default)
-            if not GPIO.input(pin_rain_sense):  # Rain detected
+        if gv.sd['rst'] == 0:
+            if GPIO.input(pin_rain_sense):  # Rain detected
                 gv.sd['rs'] = 1
             else:
                 gv.sd['rs'] = 0
-        elif gv.sd['rst'] == 0:  # Rain sensor type normally closed
-            if GPIO.input(pin_rain_sense):  # Rain detected
+        elif gv.sd['rst'] == 1:
+            if not GPIO.input(pin_rain_sense):
                 gv.sd['rs'] = 1
             else:
                 gv.sd['rs'] = 0
     except NameError:
         pass
-
 
 
 def clear_mm():
@@ -167,21 +153,18 @@ def plugin_adjustment():
 
 def get_cpu_temp(unit=None):
     """Returns the temperature of the CPU if available."""
-
     try:
         if gv.platform == 'bo':
             res = os.popen('cat /sys/class/hwmon/hwmon0/device/temp1_input').readline()
             temp = str(int(float(res) / 1000))
         elif gv.platform == 'pi':
-            command = "cat /sys/class/thermal/thermal_zone0/temp"
-            output = subprocess.check_output(command.split())
-            temp = str(int(float(output) / 1000))
+            res = os.popen('vcgencmd measure_temp').readline()
+            temp = res.replace("temp=", "").replace("'C\n", "")
         else:
             temp = str(0)
 
         if unit == 'F':
-            return str(1.8 * float(temp) + 32)
-#            return str(9.0 / 5.0 * float(temp) + 32)
+            return str(9.0 / 5.0 * float(temp) + 32)
         elif unit is not None:
             return str(float(temp))
         else:
@@ -197,27 +180,24 @@ def timestr(t):
 
 def log_run():
     """add run data to csv file - most recent first."""
-
     if gv.sd['lg']:
         if gv.lrun[1] == 98:
-            pgr = _('Run-once')
+            pgr = 'Run-once'
         elif gv.lrun[1] == 99:
-            pgr = _('Manual')
+            pgr = 'Manual'
         else:
             pgr = str(gv.lrun[1])
+
         start = time.gmtime(gv.now - gv.lrun[2])
         logline = '{"program":"' + pgr + '","station":' + str(gv.lrun[0]) + ',"duration":"' + timestr(
-            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}'
-        lines = []
-        lines.append(logline + '\n')
+            gv.lrun[2]) + '","start":"' + time.strftime('%H:%M:%S","date":"%Y-%m-%d"', start) + '}\n'
         log = read_log()
-        for r in log:
-            lines.append(json.dumps(r) + '\n')
+        log.insert(0, logline)
         with open('./data/log.json', 'w') as f:
             if gv.sd['lr']:
-                f.writelines(lines[:gv.sd['lr']])
+                f.writelines(log[:gv.sd['lr']])
             else:
-                f.writelines(lines)
+                f.writelines(log)
     return
 
 
@@ -290,7 +270,6 @@ def schedule_stations(stations):
 
 def stop_onrain():
     """Stop stations that do not ignore rain."""
-
     from gpio_pins import set_output
     for b in range(gv.sd['nbrd']):
         for s in range(8):
@@ -323,19 +302,12 @@ def stop_stations():
 
 
 def read_log():
-      result = []
-      try:
-          with io.open('./data/log.json') as logf:
-              records = logf.readlines()
-              for i in records:
-                  try:
-                      rec = ast.literal_eval(json.loads(i))
-                  except ValueError:
-                      rec = json.loads(i)
-                  result.append(rec)
-          return result
-      except IOError:
-          return result
+    try:
+        with open('./data/log.json') as logf:
+            records = logf.readlines()
+        return records
+    except IOError:
+        return []
 
 
 def jsave(data, fname):
@@ -403,10 +375,10 @@ def check_login(redirect=False):
 
 
 signin_form = form.Form(
-    form.Password('password', description = _('Password') + ':'),
+    form.Password('password', description='Password:'),
     validators=[
         form.Validator(
-            _("Incorrect password, please try again"),
+            "Incorrect password, please try again",
             lambda x: gv.sd['password'] == password_hash(x.password, gv.sd['salt'])
         )
     ]

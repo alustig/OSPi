@@ -1,7 +1,8 @@
 # !/usr/bin/env python
+# this plugins check sha on github and update ospi file from github
 
-# this plugin checks sha on github and updates ospi from github
-
+from threading import Thread, Event, Condition
+from random import randint
 import time
 import subprocess
 import sys
@@ -14,17 +15,24 @@ from ospi import template_render
 from webpages import ProtectedPage
 from helpers import restart
 
+
 # Add a new url to open the data entry page.
 urls.extend(['/UPs', 'plugins.system_update.status_page',
-             '/UPu', 'plugins.system_update.update_page'
-             ])
+             '/UPsr', 'plugins.system_update.refresh_page',
+             '/UPu', 'plugins.system_update.update_page',
+             '/UPr', 'plugins.system_update.restart_page'])
 
 # Add this plugin to the home page plugins menu
 gv.plugin_menu.append(['System update', '/UPs'])
 
 
-class StatusChecker():
+class StatusChecker(Thread):
     def __init__(self):
+        Thread.__init__(self)
+        self.daemon = True
+        self.start()
+        self.started = Event()
+        self._done = Condition()
 
         self.status = {
             'ver_str': gv.ver_str,
@@ -42,6 +50,12 @@ class StatusChecker():
             self.status['status'] = msg
         print msg
 
+    def update_wait(self):
+        self._done.acquire()
+        self._sleep_time = 0
+        self._done.wait(10)
+        self._done.release()
+
     def update(self):
         self._sleep_time = 0
 
@@ -51,7 +65,7 @@ class StatusChecker():
             time.sleep(1)
             self._sleep_time -= 1
 
-    def update_rev_data(self):
+    def _update_rev_data(self):
         """Returns the update revision data."""
 
         command = 'git remote update'
@@ -72,27 +86,40 @@ class StatusChecker():
         changes = '  ' + '\n  '.join(subprocess.check_output(command.split()).split('\n'))
 
         if new_revision == gv.revision and new_date == gv.ver_date:
-            self.add_status(_('Up-to-date.'))
+            self.add_status('Up-to-date.')
             self.status['can_update'] = False
         elif new_revision > gv.revision:
-            self.add_status(_('New version is available!'))
-            self.add_status(_('Available revision')+': %d.%d.%d (%s)' % (gv.major_ver, gv.minor_ver, new_revision - gv.old_count, new_date))
-            self.add_status(_('Changes')+':\n' + changes)
+            self.add_status('New version is available!')
+            self.add_status('Currently running revision: %d (%s)' % ((gv.revision - gv.old_count), gv.ver_date))
+            self.add_status('Available revision: %d (%s)' % (new_revision, new_date))
+            self.add_status('Changes:\n' + changes)
             self.status['can_update'] = True
         else:
-            self.add_status(_('Currently running revision')+': %d (%s)' % ((gv.revision - gv.old_count), gv.ver_date))
-            self.add_status(_('Available revision')+': %d (%s)' % ((new_revision - gv.old_count), new_date))
+            #  self.add_status('Running unknown version!')
+            self.add_status('Currently running revision: %d (%s)' % ((gv.revision - gv.old_count), gv.ver_date))
+            self.add_status('Available revision: %d (%s)' % ((new_revision - gv.old_count), new_date))
             self.status['can_update'] = False
 
+        self._done.acquire()
+        self._done.notify_all()
+        self._done.release()
+
     def run(self):
+        self._sleep(randint(3, 10))  # Sleep some time to prevent printing before startup information
 
-        try:
-            self.status['status'] = ''
+        while True:
+            try:
+                self.status['status'] = ''
+                self._update_rev_data()
+                self.started.set()
+                self._sleep(3600)
 
-        except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
-            self.add_status(_('System update plug-in encountered error')+':\n' + err_string)
+            except Exception:
+                self.started.set()
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                err_string = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+                self.add_status('System update plug-in encountered error:\n' + err_string)
+                self._sleep(60)
 
 checker = StatusChecker()
 
@@ -102,27 +129,15 @@ checker = StatusChecker()
 
 
 def perform_update():
-
-    command = "git config core.filemode true"
+    # ignore local chmod permission
+    command = "git config core.filemode false"  # http://superuser.com/questions/204757/git-chmod-problem-checkout-screws-exec-bit
     subprocess.call(command.split())
 
-    command = "git checkout master"  # Make sure we are on the master branch
+    command = "git pull"
     output = subprocess.check_output(command.split())
-
-    command = "git stash"  # stash any local changes
-    output = subprocess.check_output(command.split())
-
-    command = "git fetch"
-    output = subprocess.check_output(command.split())
-
-    command = "git merge -X theirs origin/master"
-    output = subprocess.check_output(command.split())
-
-    command = "rm sessions/*"
-    subprocess.call(command.split())
-
 
     print 'Update result:', output
+    restart(3)
 
 ################################################################################
 # Web pages:                                                                   #
@@ -130,16 +145,32 @@ def perform_update():
 
 
 class status_page(ProtectedPage):
-    """Load an html page with rev data."""
+    """Load an html page rev data."""
 
     def GET(self):
-        checker.update_rev_data()
+        checker.started.wait(10)    # Make sure we are initialized
         return template_render.system_update(checker.status)
 
+
+class refresh_page(ProtectedPage):
+    """Refresh status and show it."""
+
+    def GET(self):
+        checker.update_wait()
+        raise web.seeother('/UPs')
+
+
 class update_page(ProtectedPage):
-    """Update OSPi from github and return text message from command line."""
+    """Update OSPi from github and return text message from comm line."""
 
     def GET(self):
         perform_update()
-        raise web.seeother('/restart')
+        return template_render.restarting('/UPs')
 
+
+class restart_page(ProtectedPage):
+    """Restart system."""
+
+    def GET(self):
+        restart(3)
+        return template_render.restarting('/UPs')
