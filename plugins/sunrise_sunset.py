@@ -169,12 +169,7 @@ def create_program(data):
         sstime = datetime.datetime(y,m,d,int(ss[0]),int(ss[1]))
         sse = data['sse'].split(":")
         sse = map(int, sse)
-        if ss[1] > sse[1]:
-            sse[1] = 60-ss[1]
-            sse[0] -= 1
-            ssm = sse[1]
-        else:
-            ssm = sse[1]-ss[1]
+        ssm = sse[1]-ss[1]
         sshr = sse[0]-ss[0]
         ssstd = datetime.timedelta(0,0,0,0,int(data['sss']))
         ssetd = datetime.timedelta(0,0,0,0,sshr*60+ssm)
